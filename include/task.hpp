@@ -4,16 +4,19 @@
 #include <string>
 #include <map>
 #include "../include/config.hpp"
+#include "memoryManager.hpp"
 using namespace std;
 
 class Task{
     private:
         string id;
         map<int, int> pageTable;
+        MemoryManager* manager;
 
     public:
-        Task(string id){
+        Task(string id, MemoryManager* &manager){
             this->id = id;
+            this->manager = manager;
         }
     
         void setPageTable(int page, int frame){
@@ -30,6 +33,7 @@ class Task{
                     continue;
                 }
 
+                int physicalPage = manager->allocatePage();
                 
             }
         }
