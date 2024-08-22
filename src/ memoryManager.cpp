@@ -9,6 +9,7 @@ private:
     int physical_pages=physical_memory/page_size;
     int virtual_pages=virtual_memory/page_size;
     int physical_page_alloted=0;
+    vector<int> task;
 
 
 public:
@@ -21,7 +22,7 @@ public:
         cout << "Physical Memory: " << physical_memory << " bytes" << endl;
         cout << "Virtual Memory: " << virtual_memory << " bytes" << endl;
          cout << "Physical page: " << physical_pages << " bytes" << endl;
-            cout << "Physical page: " << physical_page_alloted << " bytes" << endl;
+         cout << "Physical page: " << physical_page_alloted << " bytes" << endl;
         cout << "Virtual page: " << virtual_pages << " bytes" << endl;
         cout << "Page Size: " << page_size << " bytes" << endl;
     }
@@ -29,6 +30,7 @@ public:
         int number_physical_page=size/page_size;
         physical_pages-=number_physical_page;
         physical_page_alloted+=number_physical_page;
+        physical_memory-=((number_physical_page)*8);
 
     }
 };
