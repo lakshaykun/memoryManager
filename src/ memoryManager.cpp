@@ -8,6 +8,7 @@ private:
     size_t page_size;
     int physical_pages=physical_memory/page_size;
     int virtual_pages=virtual_memory/page_size;
+    int physical_page_alloted=0;
 
 
 public:
@@ -20,12 +21,14 @@ public:
         cout << "Physical Memory: " << physical_memory << " bytes" << endl;
         cout << "Virtual Memory: " << virtual_memory << " bytes" << endl;
          cout << "Physical page: " << physical_pages << " bytes" << endl;
+            cout << "Physical page: " << physical_page_alloted << " bytes" << endl;
         cout << "Virtual page: " << virtual_pages << " bytes" << endl;
         cout << "Page Size: " << page_size << " bytes" << endl;
     }
     void addtask(string start_addres,int size){
         int number_physical_page=size/page_size;
         physical_pages-=number_physical_page;
+        physical_page_alloted+=number_physical_page;
 
     }
 };
