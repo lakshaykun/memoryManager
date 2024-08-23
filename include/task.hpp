@@ -75,19 +75,19 @@ class TaskSingle{
             int pageReq = size/pageSize;
             for (int i = 0; i < pageReq; i++){
                 int virtualPage = (logicalAddress + i) / pageSize;
-                if (pageTable[virtualPage] != -1){
-                    printf("Page hit\n");
-                    continue;
-                }
+                // if (pageTable[virtualPage] != -1){
+                //     printf("Page hit\n");
+                //     continue;
+                // }
 
                 int physicalPage = manager->allocatePage();
 
-                if(physicalPage != -1) {
-                    pageTable[virtualPage] = physicalPage;
-                } else {
-                    std::cerr << "No free physical pages available for task \n";
-                    break;
-                }
+                // if(physicalPage != -1) {
+                //     pageTable[virtualPage] = physicalPage;
+                // } else {
+                //     std::cerr << "No free physical pages available for task \n";
+                //     break;
+                // }
             }
         }
 
