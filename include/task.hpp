@@ -76,10 +76,28 @@ private:
     vector<int> pageTable;  // Page table as a vector where each index is a virtual page number
     MemoryManager* manager;  // Pointer to the memory manager to allocate/deallocate pages
 
+<<<<<<< HEAD
 public:
     // Constructor initializes task ID, memory manager pointer, and page table size
     TaskSingle(string id, MemoryManager* &manager)
         : id(id), manager(manager), pageTable(virtualPages, -1) {}
+=======
+    public:
+        TaskSingle(string id, MemoryManager* &manager){
+            this->id = id;
+            this->manager = manager;
+        }
+    
+        void requestMemory(int logicalAddress, size_t size){
+            // Check if the page is in the page table
+            int pageReq = size/pageSize;
+            for (int i = 0; i < pageReq; i++){
+                int virtualPage = (logicalAddress + i) / pageSize;
+                // if (pageTable[virtualPage] != -1){
+                //     printf("Page hit\n");
+                //     continue;
+                // }
+>>>>>>> refs/remotes/origin/main
 
     // Requests memory by allocating required pages
     void requestMemory(int logicalAddress, size_t size) {
@@ -93,6 +111,7 @@ public:
                 continue;  // Skip allocation if page hit
             }
 
+<<<<<<< HEAD
             // Allocate a new physical page if not present
             int physicalPage = manager->allocatePage();
 
@@ -102,6 +121,14 @@ public:
             } else {
                 cerr << "No free physical pages available for task\n";
                 break;  // Exit if no pages are available
+=======
+                // if(physicalPage != -1) {
+                //     pageTable[virtualPage] = physicalPage;
+                // } else {
+                //     std::cerr << "No free physical pages available for task \n";
+                //     break;
+                // }
+>>>>>>> refs/remotes/origin/main
             }
         }
     }
