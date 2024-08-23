@@ -10,7 +10,7 @@ private:
     size_t virtual_pages=virtual_memory/page_size;
     size_t physical_page_alloted=0;
     vector<int> task;
-    bool arr[physical_pages]={0};
+ 
 
 
 public:
@@ -32,7 +32,7 @@ public:
         physical_pages-=number_physical_page;
         physical_page_alloted+=number_physical_page;
         physical_memory-=((number_physical_page)*8);
-        task.push_back();
+       
 
     }
 };
