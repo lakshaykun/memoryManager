@@ -7,19 +7,14 @@
 using namespace std;
 
 int main() {
-    // Create a MemoryManager object with example values
-    MemoryManager manager(virtualMemorySize, physicalMemorySize, pageSize);
-    // Display memory information
-    manager.displayMemory();
-    manager.addtask("jasj",20);
     // Create a TaskManager object
-    TaskManager taskManager(manager);
+    TaskManager taskManager;
     // Add a task to the TaskManager
-    taskManager.addTask("task1");
+    taskManager.addTask("T1", 4000, 16);
     // Display tasks
     taskManager.displayTasks();
     // Remove a task from the TaskManager
-    taskManager.removeTask("task1");
+    taskManager.removeTask("T1");
     // Display tasks
     taskManager.displayTasks();
     return 0;

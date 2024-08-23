@@ -12,22 +12,14 @@ using namespace std;
 class TaskManager {
     private:
         map<string, Task*> tasks;
-        size_t pageSize;
-        size_t virtualMemorySize;
-        size_t physicalMemorySize;
-        MemoryManager manager;
+        MemoryManager* manager = new MemoryManager(physicalMemorySize, virtualMemorySize, pageSize);
 
     public:
-
-        TaskManager(MemoryManager &manager) : manager(manager) {}
-
-        void addTask(string id){
+        void addTask(string id, int logicalAddress, size_t size){
             if (tasks.find(id) == tasks.end()){
-                std::cerr << "Task not found\n";
-                return;
+                tasks[id] = new Task(id, manager);
             }
-            Task* task = new Task(id, manager);
-            tasks[id] = task;
+            tasks[id]->requestMemory(logicalAddress, size);
         }
 
         void removeTask(string id){
@@ -36,14 +28,19 @@ class TaskManager {
                 return;
             }
             tasks[id]->deallocateMemory();
+            tasks.erase(id);
         }
 
         void displayTasks(){
             for (auto& task : tasks){
                 printf("Task ID: %s\n", task.first.c_str());
-                printf("Page Table Size: %lu bytes\n", task.second->getPageTableSize());
+                vector<size_t> pageTableSize = task.second->getPageTableSize();
+                printf("Page Table Size:\n");
+                printf(" Map Implementation %lu\n", pageTableSize[0]);
+                printf(" Single Level Implementation %lu\n", pageTableSize[1]);
+                printf(" Multi Level Implementation %lu\n", pageTableSize[2]);
             }
         }
 };
 
-#endif
+#endif // TASK_MANAGER

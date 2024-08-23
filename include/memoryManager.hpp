@@ -1,3 +1,5 @@
+#ifndef MEMORY_MANAGER
+#define MEMORY_MANAGER
 #include <iostream>
 #include <vector>
 using namespace std;
@@ -52,12 +54,4 @@ public:
     }
 };
 
-int main() {
-    // Create a MemoryManager object with example values
-    MemoryManager manager(1000, 1000, 8);
-    // Display memory information
-    manager.displayMemory();
-    manager.addtask("jasj",20);
-    manager.displayMemory();
-    return 0;
-}
+#endif // MEMORY_MANAGER
