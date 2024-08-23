@@ -1,5 +1,5 @@
-#ifndef TASK_H
-#define TASK_H
+#ifndef TASK
+#define TASK
 #include <stdio.h>
 #include <string>
 #include <map>
@@ -7,7 +7,7 @@
 #include "memoryManager.hpp"
 using namespace std;
 
-class Task{
+class TaskMap{
     private:
         string id;
         map<int, int> pageTable;
