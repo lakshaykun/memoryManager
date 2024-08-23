@@ -9,15 +9,51 @@
 #include "task.hpp"
 using namespace std;
 
+
+class Task {
+    private:
+        string id;
+        TaskMap* taskMap;
+        TaskSingle* taskSingle;
+        TaskMulti* taskMulti;
+
+    public:
+        Task(string id, MemoryManager* &manager, PageTable* primaryPageTable) {
+            this->id = id;
+            this->taskMap = new TaskMap(id, manager);
+            this->taskSingle = new TaskSingle(id, manager);
+            this->taskMulti = new TaskMulti(id, manager, primaryPageTable);
+        }
+
+        void requestMemory(int logicalAddress, size_t size) {
+            taskMap->requestMemory(logicalAddress, size);
+            taskSingle->requestMemory(logicalAddress, size);
+            taskMulti->requestMemory(logicalAddress, size);
+        }
+
+        void deallocateMemory() {
+            taskMap->deallocateMemory();
+            taskSingle->deallocateMemory();
+            taskMulti->deallocateMemory();
+        }
+
+        vector<size_t> getPageTableSize() {
+            return {taskMap->getPageTableSize(), taskSingle->getPageTableSize(), taskMulti->getPageTableSize()};
+        }
+};
+
 class TaskManager {
     private:
         map<string, Task*> tasks;
         MemoryManager* manager = new MemoryManager(physicalMemorySize, virtualMemorySize, pageSize);
+        vector<int> pageHits = vector<int>(3,0);
+        vector<double> executionTime = vector<double>(3,0);
+        PageTable primaryPageTable = PageTable(pageTableSize1, nullptr);
 
     public:
         void addTask(string id, int logicalAddress, size_t size){
             if (tasks.find(id) == tasks.end()){
-                tasks[id] = new Task(id, manager);
+                tasks[id] = new Task(id, manager, &primaryPageTable);
             }
             tasks[id]->requestMemory(logicalAddress, size);
         }
@@ -29,6 +65,7 @@ class TaskManager {
             }
             tasks[id]->deallocateMemory();
             tasks.erase(id);
+            
         }
 
         void displayTasks(){
