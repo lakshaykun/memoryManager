@@ -6,6 +6,7 @@
 #include <vector>
 #include <map>
 #include <bitset>
+#include <ctime>
 #include "config.hpp"
 #include "memoryManager.hpp"
 
@@ -20,19 +21,28 @@ private:
     map<long long, long long> pageTable;  // Page table mapping virtual pages to physical pages
     MemoryManager* manager;  // Polong longer to the memory manager to allocate/deallocate pages
     long long pageHit = 0;  // Counter for page hits
+    long long pageMiss = 0;
+    double executionTime = 0;
 
 public:
     // Constructor initializes task ID and memory manager polong longer
-    TaskMap(string id, MemoryManager* const &manager) : id(id), manager(manager) {}
+    TaskMap(string id, MemoryManager* const &manager) {
+        this->id = id;
+        this->manager = manager;
+        for (long long i=0; i<virtualPages; i++){
+            pageTable[i] = -1ll;
+        }
+    }
 
     // Requests memory by allocating required pages and returns the number of page hits
     void requestMemory(long long logicalAddress, size_t size) {
+        double stime = clock();
         long long pageReq = (size + pageSize - 1) / pageSize;  // Calculate required pages, rounding up
         for (long long i = 0; i < pageReq; i++) {
             // Calculate the virtual page number based on the logical address and page size
             long long virtualPage = (logicalAddress + i * pageSize) / pageSize;
             // Check if the page is already in the page table (page hit)
-            if (pageTable.find(virtualPage) != pageTable.end()) {
+            if (pageTable[virtualPage] != -1) {
                 pageHit++;
                 continue;  // Skip allocation if page hit
             }
@@ -48,6 +58,8 @@ public:
                 break;  // Exit if no pages are available
             }
         }
+        double etime = clock();
+        executionTime += (etime - stime) / CLOCKS_PER_SEC;
     }
 
     // Returns the size of the page table in bytes
@@ -67,6 +79,14 @@ public:
         }
         pageTable.clear();  // Clear the page table
     }
+
+    long long getPageHit() const {
+        return pageHit;
+    }
+
+    double getExecutionTime() const {
+        return executionTime;
+    }
 };
 
 // TaskSingle class uses a single-level page table implemented as a vector
@@ -76,6 +96,8 @@ private:
     vector<long long> pageTable = vector<long long>(virtualPages, -1);  // Page table as a vector where each index is a virtual page number
     MemoryManager* manager;  // Polong longer to the memory manager to allocate/deallocate pages
     long long pageHit = 0;  // Counter for page hits
+    long long pageMiss = 0;
+    double executionTime = 0;
 
 public:
     // Constructor initializes task ID, memory manager polong longer, and page table size
@@ -84,11 +106,11 @@ public:
 
     // Requests memory by allocating required pages
     void requestMemory(long long logicalAddress, size_t size) {
+        double stime = clock();
         long long pageReq = (size + pageSize - 1) / pageSize;  // Calculate required pages, rounding up
         for (long long i = 0; i < pageReq; i++) {
             // Calculate the virtual page number based on the logical address and page size
             long long virtualPage = (logicalAddress + i * pageSize) / pageSize;
-            cout << virtualPage << endl;
             // Check if the page is already in the page table (page hit)
             if (pageTable[virtualPage] != -1) {
                 pageHit++;
@@ -106,6 +128,8 @@ public:
                 break;  // Exit if no pages are available
             }
         }
+        double etime = clock();
+        executionTime += (etime - stime) / CLOCKS_PER_SEC;
     }
 
     // Returns the size of the page table in bytes
@@ -131,6 +155,10 @@ public:
     long long getPageHit() const {
         return pageHit;
     }
+
+    double getExecutionTime() const {
+        return executionTime;
+    }
 };
 
 // TaskMulti class uses a multi-level page table implemented with vectors of vectors
@@ -140,6 +168,8 @@ private:
     PageTable pageTable1 = PageTable(pageTableSize1, nullptr); // Polong longer to the first-level page table
     MemoryManager* manager;  // Polong longer to the memory manager to allocate/deallocate pages
     long long pageHits = 0;  // Counter for page hits
+    long long pageMiss = 0;
+    double executionTime = 0;
 
 public:
     // Constructor initializes task ID, memory manager polong longer, and the first-level page table size
@@ -148,6 +178,7 @@ public:
 
     // Requests memory by allocating required pages using a two-level page table structure
     void requestMemory(long long logicalAddress, size_t size) {
+        double stime = clock();
         long long pageReq = (size + pageSize - 1) / pageSize;  // Calculate required pages, rounding up
         for (long long i = 0; i < pageReq; i++) {
             // Calculate the first and second-level page table indices
@@ -173,6 +204,8 @@ public:
                 break;  // Exit if no pages are available
             }
         }
+        double etime = clock();
+        executionTime += (etime - stime) / CLOCKS_PER_SEC;
     }
 
     // Returns the physical memory allocated to this task in bytes
@@ -206,8 +239,12 @@ public:
         pageTable1.clear();  // Clear the first-level page table
     }
 
-    long long getPageHits() const {
+    long long getPageHit() const {
         return pageHits;
+    }
+
+    double getExecutionTime() const {
+        return executionTime;
     }
 };
 
