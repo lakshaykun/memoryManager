@@ -29,11 +29,11 @@ size_t pageTableEntrySize2 = 1 << (n-p)/2;
 
 
 // starting address of memory sections
-size_t text = 0x08048000;
-size_t data = 0x0ab11000;
-size_t bss = 0x0ab99000;
-size_t heap = 0x50000000;
-size_t shared = 0x40000000;
-size_t stack = 0xbfffb000;
+size_t Text = 0x08048000;
+size_t Data = 0x0ab11000;
+size_t Bss = 0x0ab99000;
+size_t Heap = 0x50000000;
+size_t Shared = 0x40000000;
+size_t Stack = 0xbfffb000;
 
 #endif

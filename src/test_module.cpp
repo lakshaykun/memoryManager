@@ -46,8 +46,9 @@ int main() {
     const unsigned int TEXT_RANGE = 0x1000;    // Example range for text section
     const unsigned int DATA_RANGE = 0x1000;    // Example range for data section
     const unsigned int STACK_RANGE = 0x1000;   // Example range for stack section
-    const unsigned int LIBRARY_RANGE = 0x1000; // Example range for shared library section
+    const unsigned int SHARED = 0x1000; // Example range for shared library section
     const unsigned int HEAP_RANGE = 0x1000;    // Example range for heap section
+    const unsigned int BSS = 0x1000;    // Example range for heap section
 
     // Generate traces
     for (int i = 0; i < n; ++i) {
@@ -60,29 +61,34 @@ int main() {
         int sectionType = rand() % 5;
         switch (sectionType) {
             case 0:
-                startAddress = 0;
+                startAddress = Text;
                 range = TEXT_RANGE;
                 sectionName = "Text";
                 break;
             case 1:
-                startAddress = 0;
+                startAddress = Data;
                 range = DATA_RANGE;
                 sectionName = "Data";
                 break;
             case 2:
-                startAddress =0;
+                startAddress =Stack;
                 range = STACK_RANGE;
                 sectionName = "Stack";
                 break;
             case 3:
-                startAddress = 0;
-                range = LIBRARY_RANGE;
-                sectionName = "Library";
+                startAddress = Shared;
+                range = SHARED;
+                sectionName = "SHARED";
                 break;
             case 4:
-                startAddress = 0;
+                startAddress = Heap;
                 range = HEAP_RANGE;
                 sectionName = "Heap";
+                break;
+             case 5:
+                startAddress = Bss;
+                range = BSS;
+                sectionName = "Bss";
                 break;
         }
 
