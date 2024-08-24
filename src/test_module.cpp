@@ -31,9 +31,16 @@ int main() {
     cout<<"Enter minimum file size number only"<<endl;
     int size;
     cin>>size;
-    cout<<"KB or MB"<<endl;
+    cout<<"KB-->1 or MB--2"<<endl;
+    int kbormb;
+    cin>>kbormb;
     string tasksize;
-    cin>>tasksize;
+    if(kbormb==1){
+        tasksize="KB";
+    }
+    else{
+        tasksize="MB";
+    }
 
     // Open a file to write the generated traces
     std::ofstream traceFile("memory_traces.txt");
