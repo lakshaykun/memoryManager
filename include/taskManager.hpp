@@ -45,6 +45,7 @@ class Task {
 class TaskManager {
     private:
         map<string, Task*> tasks;
+        
         MemoryManager* manager = new MemoryManager(physicalMemorySize, virtualMemorySize, pageSize);
         vector<int> pageHits = vector<int>(3,0);
         vector<double> executionTime = vector<double>(3,0);

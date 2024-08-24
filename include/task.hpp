@@ -72,14 +72,14 @@ public:
 class TaskSingle {
 private:
     string id;  // Unique identifier for the task
-    vector<int> pageTable = vector<int>(virtualPages, -1);  // Page table as a vector where each index is a virtual page number
+    vector<int> pageTable;  // Page table as a vector where each index is a virtual page number
     MemoryManager* manager;  // Pointer to the memory manager to allocate/deallocate pages
     int pageHit = 0;  // Counter for page hits
 
 public:
     // Constructor initializes task ID, memory manager pointer, and page table size
     TaskSingle(string id, MemoryManager* &manager)
-        : id(id), manager(manager){}
+        : id(id), manager(manager), pageTable(virtualPages, -1) {}
 
     // Requests memory by allocating required pages
     void requestMemory(int logicalAddress, size_t size) {
@@ -87,7 +87,6 @@ public:
         for (int i = 0; i < pageReq; i++) {
             // Calculate the virtual page number based on the logical address and page size
             int virtualPage = (logicalAddress + i * pageSize) / pageSize;
-            cout << virtualPage << endl;
             // Check if the page is already in the page table (page hit)
             if (pageTable[virtualPage] != -1) {
                 pageHit++;
