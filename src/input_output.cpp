@@ -29,10 +29,7 @@ void Trace_file_task(const string& filename){
        
         address=address.substr(2);
         size_t address_hex=stoull(address,nullptr,16);
-<<<<<<< HEAD
        
-=======
->>>>>>> refs/remotes/origin/main
         size_t size_dec=stoull(size.substr(0,size.find("KB")))*1024;
         taskManager.addTask(taskid, address_hex, size_dec);
         
@@ -43,7 +40,6 @@ void Trace_file_task(const string& filename){
 }
 
 int main(){
-<<<<<<< HEAD
     Trace_file_task("memory_traces.txt");
     
     // Create a TaskManager object
@@ -51,14 +47,5 @@ int main(){
     // Add a task to the TaskManager
     taskManager.displayMemoryManager();
     taskManager.displayPageHits();
-=======
-    Trace_file_task("file.txt");
-        
-    // Display tasks
-    taskManager.displayTasks();
-    taskManager.displayMemoryManager();
-    taskManager.displayPageHits();
-    taskManager.displayExecutionTime();
->>>>>>> refs/remotes/origin/main
     return 0;
 }
