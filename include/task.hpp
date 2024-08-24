@@ -12,13 +12,13 @@
 
 using namespace std;
 
-typedef vector<vector<long long>*> PageTable;
+typedef vector<vector<int>*> PageTable;
 
 // TaskMap class uses a map-based page table to manage virtual to physical page mappings
 class TaskMap {
 private:
     string id;  // Unique identifier for the task
-    map<long long, long long> pageTable;  // Page table mapping virtual pages to physical pages
+    map<int, int> pageTable;  // Page table mapping virtual pages to physical pages
     MemoryManager* manager;  // Polong longer to the memory manager to allocate/deallocate pages
     long long pageHit = 0;  // Counter for page hits
     long long pageMiss = 0;
