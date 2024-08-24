@@ -22,8 +22,7 @@ size_t physicalPages = physicalMemorySize/pageSize;
 
 
 // multi level page table
-size_t temp = n-p;
-size_t pageTableSize1 = (1<<((n-p)/2));
-size_t pageTableSize2 = (1<<((n-p)%2));
+size_t pageTableSize2 = 1 << (n-p)/2;
+size_t pageTableSize1 = 1 << (n-p-pageTableSize2);
 
 #endif

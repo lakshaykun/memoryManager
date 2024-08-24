@@ -79,6 +79,26 @@ class TaskManager {
                 printf(" Multi Level Implementation %lu\n", pageTableSize[2]);
             }
         }
+
+        void displayPageHits(){
+            printf("Page Hits:\n");
+            printf(" Map Implementation %lu\n", pageHits[0]);
+            printf(" Single Level Implementation %lu\n", pageHits[1]);
+            printf(" Multi Level Implementation %lu\n", pageHits[2]);
+        }
+
+        void displayExecutionTime(){
+            printf("Execution Time:\n");
+            printf(" Map Implementation %f\n", executionTime[0]);
+            printf(" Single Level Implementation %f\n", executionTime[1]);
+            printf(" Multi Level Implementation %f\n", executionTime[2]);
+        }
+
+        void displayMemoryManager(){
+            for (auto& manager : managers){
+                manager.displayMemory();
+            }
+        }
 };
 
 #endif // TASK_MANAGER
