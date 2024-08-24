@@ -17,6 +17,8 @@ class Task {
         string id;
         TaskMap* taskMap;
         TaskSingle* taskSingle;
+        vector<long long> pageHits = vector<long long>(3, 0);
+        vector<double> executionTime = vector<double>(3, 0);
         TaskMulti* taskMulti;
 
     public:
@@ -41,6 +43,20 @@ class Task {
 
         vector<size_t> getPageTableSize() {
             return {taskMap->getPageTableSize(), taskSingle->getPageTableSize(), taskMulti->getPageTableSize()};
+        }
+
+        vector<long long> getPageHits(){
+            pageHits[0] = taskMap->getPageHit();
+            pageHits[1] = taskSingle->getPageHit();
+            pageHits[2] = taskMulti->getPageHit();
+            return pageHits;
+        }
+
+        vector<double> getExecutionTime(){
+            executionTime[0] = taskMap->getExecutionTime();
+            executionTime[1] = taskSingle->getExecutionTime();
+            executionTime[2] = taskMulti->getExecutionTime();
+            return executionTime;
         }
 };
 
@@ -80,18 +96,42 @@ class TaskManager {
             }
         }
 
+        void getPageHits(){
+            vector<long long> tempHits = vector<long long>(3,0);
+            for (auto& task : tasks){
+                vector<long long> hits = task.second->getPageHits();
+                for (int i = 0; i < 3; i++){
+                    tempHits[i] += hits[i];
+                }
+            }
+            pageHits = tempHits;
+        }
+
+        void getExecutionTime(){
+            vector<double> tempTime = vector<double>(3,0);
+            for (auto& task : tasks){
+                vector<double> times = task.second->getExecutionTime();
+                for (int i = 0; i < 3; i++){
+                    tempTime[i] += times[i];
+                }
+            }
+            executionTime = tempTime;
+        }
+
         void displayPageHits(){
-            printf("Page Hits:\n");
-            printf(" Map Implementation %lu\n", pageHits[0]);
-            printf(" Single Level Implementation %lu\n", pageHits[1]);
-            printf(" Multi Level Implementation %lu\n", pageHits[2]);
+            getPageHits();
+            cout << "Page Hits:\n";
+            cout << " Map Implementation " << pageHits[0] << endl;
+            cout << " Single Level Implementation " << pageHits[1] << endl;
+            cout << " Multi Level Implementation " << pageHits[2] << endl;
         }
 
         void displayExecutionTime(){
-            printf("Execution Time:\n");
-            printf(" Map Implementation %f\n", executionTime[0]);
-            printf(" Single Level Implementation %f\n", executionTime[1]);
-            printf(" Multi Level Implementation %f\n", executionTime[2]);
+            getExecutionTime();
+            cout << "Execution Time:\n";
+            cout << " Map Implementation " << executionTime[0] << endl;
+            cout << " Single Level Implementation " << executionTime[1] << endl;
+            cout << " Multi Level Implementation " << executionTime[2] << endl;
         }
 
         void displayMemoryManager(){
