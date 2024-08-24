@@ -33,7 +33,7 @@ public:
         // Constructor body (if needed)
     }
    
-    long long allocate_memory(){
+    long long allocatePage(){
         if(physical_pages_available>=1){
             physical_pages_allocated+=1;
             physical_pages_available-=1;
