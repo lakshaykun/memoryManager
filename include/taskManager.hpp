@@ -27,7 +27,7 @@ class Task {
             this->taskMulti = new TaskMulti(id, &managers->at(2));
         }
 
-        void requestMemory(int logicalAddress, size_t size) {
+        void requestMemory(long long logicalAddress, size_t size) {
             taskMap->requestMemory(logicalAddress, size);
             taskSingle->requestMemory(logicalAddress, size);
             taskMulti->requestMemory(logicalAddress, size);
@@ -48,11 +48,11 @@ class TaskManager {
     private:
         map<string, Task*> tasks;
         Managers managers = Managers(3, MemoryManager(physicalMemorySize, virtualMemorySize, pageSize));
-        vector<int> pageHits = vector<int>(3,0);
+        vector<long long> pageHits = vector<long long>(3,0);
         vector<double> executionTime = vector<double>(3,0);
 
     public:
-        void addTask(string id, int logicalAddress, size_t size){
+        void addTask(string id, long long logicalAddress, size_t size){
             if (tasks.find(id) == tasks.end()){
                 tasks[id] = new Task(id, &managers);
             }
