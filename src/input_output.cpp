@@ -29,7 +29,7 @@ void Trace_file_task(const string& filename){
        
         address=address.substr(2);
         size_t address_hex=stoull(address,nullptr,16);
-        cout << address_hex << endl;
+       
         size_t size_dec=stoull(size.substr(0,size.find("KB")))*1024;
         taskManager.addTask(taskid, address_hex, size_dec);
         
@@ -40,17 +40,12 @@ void Trace_file_task(const string& filename){
 }
 
 int main(){
-    Trace_file_task("file.txt");
+    Trace_file_task("memory_traces.txt");
     
     // Create a TaskManager object
     
     // Add a task to the TaskManager
-    
-    // Display tasks
-    taskManager.displayTasks();
-    // Remove a task from the TaskManager
-    
-    // Display tasks
-    // taskManager.displayTasks();
+    taskManager.displayMemoryManager();
+    taskManager.displayPageHits();
     return 0;
 }

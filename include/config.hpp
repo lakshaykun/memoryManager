@@ -6,9 +6,9 @@
 
 size_t addr = 32;
 
-size_t n = 32;
-size_t m = 32;
-size_t p = 12;
+size_t n = 33;
+size_t m = 34;
+size_t p = 10;
 
 
 size_t pageSize = (1LL<<p);
