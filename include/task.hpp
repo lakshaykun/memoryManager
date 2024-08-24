@@ -18,15 +18,15 @@ private:
     string id;  // Unique identifier for the task
     map<int, int> pageTable;  // Page table mapping virtual pages to physical pages
     MemoryManager* manager;  // Pointer to the memory manager to allocate/deallocate pages
+    int pageHit = 0;  // Counter for page hits
 
 public:
     // Constructor initializes task ID and memory manager pointer
     TaskMap(string id, MemoryManager* &manager) : id(id), manager(manager) {}
 
     // Requests memory by allocating required pages and returns the number of page hits
-    int requestMemory(int logicalAddress, size_t size) {
+    void requestMemory(int logicalAddress, size_t size) {
         int pageReq = (size + pageSize - 1) / pageSize;  // Calculate required pages, rounding up
-        int pageHit = 0;  // Counter for page hits
         for (int i = 0; i < pageReq; i++) {
             // Calculate the virtual page number based on the logical address and page size
             int virtualPage = (logicalAddress + i * pageSize) / pageSize;
@@ -47,7 +47,6 @@ public:
                 break;  // Exit if no pages are available
             }
         }
-        return pageHit;  // Return the number of page hits
     }
 
     // Returns the size of the page table in bytes
@@ -75,29 +74,12 @@ private:
     string id;  // Unique identifier for the task
     vector<int> pageTable;  // Page table as a vector where each index is a virtual page number
     MemoryManager* manager;  // Pointer to the memory manager to allocate/deallocate pages
+    int pageHit = 0;  // Counter for page hits
 
-<<<<<<< HEAD
 public:
     // Constructor initializes task ID, memory manager pointer, and page table size
     TaskSingle(string id, MemoryManager* &manager)
         : id(id), manager(manager), pageTable(virtualPages, -1) {}
-=======
-    public:
-        TaskSingle(string id, MemoryManager* &manager){
-            this->id = id;
-            this->manager = manager;
-        }
-    
-        void requestMemory(int logicalAddress, size_t size){
-            // Check if the page is in the page table
-            int pageReq = size/pageSize;
-            for (int i = 0; i < pageReq; i++){
-                int virtualPage = (logicalAddress + i) / pageSize;
-                // if (pageTable[virtualPage] != -1){
-                //     printf("Page hit\n");
-                //     continue;
-                // }
->>>>>>> refs/remotes/origin/main
 
     // Requests memory by allocating required pages
     void requestMemory(int logicalAddress, size_t size) {
@@ -107,11 +89,10 @@ public:
             int virtualPage = (logicalAddress + i * pageSize) / pageSize;
             // Check if the page is already in the page table (page hit)
             if (pageTable[virtualPage] != -1) {
-                printf("Page hit\n");
+                pageHit++;
                 continue;  // Skip allocation if page hit
             }
 
-<<<<<<< HEAD
             // Allocate a new physical page if not present
             int physicalPage = manager->allocatePage();
 
@@ -121,14 +102,6 @@ public:
             } else {
                 cerr << "No free physical pages available for task\n";
                 break;  // Exit if no pages are available
-=======
-                // if(physicalPage != -1) {
-                //     pageTable[virtualPage] = physicalPage;
-                // } else {
-                //     std::cerr << "No free physical pages available for task \n";
-                //     break;
-                // }
->>>>>>> refs/remotes/origin/main
             }
         }
     }
@@ -152,21 +125,24 @@ public:
         }
         pageTable.clear();  // Clear the page table
     }
+
+    int getPageHit() const {
+        return pageHit;
+    }
 };
 
 // TaskMulti class uses a multi-level page table implemented with vectors of vectors
 class TaskMulti {
 private:
     string id;  // Unique identifier for the task
-    vector<int> pageTable = vector<int>(pageTableSize2, -1);  // Second-level page table
-    PageTable* primaryPageTable; // Pointer to the first-level page table
+    PageTable pageTable1 = PageTable(pageTableSize1, nullptr); // Pointer to the first-level page table
     MemoryManager* manager;  // Pointer to the memory manager to allocate/deallocate pages
     int pageHits = 0;  // Counter for page hits
 
 public:
     // Constructor initializes task ID, memory manager pointer, and the first-level page table size
-    TaskMulti(string id, MemoryManager* &manager, PageTable* &primaryPageTable)
-        : id(id), manager(manager), primaryPageTable(primaryPageTable) {}
+    TaskMulti(string id, MemoryManager* &manager)
+        : id(id), manager(manager){}
 
     // Requests memory by allocating required pages using a two-level page table structure
     void requestMemory(int logicalAddress, size_t size) {
@@ -176,12 +152,12 @@ public:
             int vpn1 = (logicalAddress + i * pageSize) / pageTableSize1;
             int vpn2 = (logicalAddress + i * pageSize) % pageTableSize1;
             // Check if the first-level page table entry is present; if not, create it
-            if (primaryPageTable->at(vpn1) == nullptr) {
-                primaryPageTable->at(vpn1) = &pageTable;  // Map first-level to second-level page table
+            if (pageTable1.at(vpn1) == nullptr) {
+                pageTable1.at(vpn1) = new vector<int>(pageTableSize2, -1);  // Map first-level to second-level page table
             }
 
             // Check if the second-level page table entry is a page hit
-            if (pageTable.at(vpn2) != -1) {
+            if (pageTable1.at(vpn1)->at(vpn2) != -1) {
                 pageHits++;
                 continue;  // Skip allocation if page hit
             }
@@ -189,7 +165,7 @@ public:
             // Allocate a new physical page if not present
             int physicalPage = manager->allocatePage();
             if (physicalPage != -1) {
-                pageTable.at(vpn2) = physicalPage;  // Map virtual to physical page
+                pageTable1.at(vpn1)->at(vpn2) = physicalPage;  // Map virtual to physical page
             } else {
                 cerr << "No free physical pages available for task\n";
                 break;  // Exit if no pages are available
@@ -200,12 +176,12 @@ public:
     // Returns the physical memory allocated to this task in bytes
     size_t getPageTableSize() const {
         size_t size = 0;
-        for (auto& pt : pageTable) {
-            if (pt != -1) {
-                size += 1;  // Calculate the size of each level in the table
+        for (const auto& entry : pageTable1) {
+            if (entry != nullptr) {
+                size += entry->size() * sizeof(int);  // Calculate size of second-level page table
             }
         }
-        return size*pageSize; // Return the total size of the page table
+        return pageTable1.size() * sizeof(vector<int>*) + size;  // Calculate size of first-level page table
     }
 
     // Returns the unique identifier of the task
@@ -215,12 +191,17 @@ public:
 
     // Deallocates all pages used by this task and clears the multi-level page table
     void deallocateMemory() {
-        for (int entry : pageTable) {
-            if (entry != -1) {
-                manager->deallocatePage(entry);  // Deallocate each physical page
+        for (auto& entry : pageTable1) {
+            if (entry != nullptr) {
+                for (int page : *entry) {
+                    if (page != -1) {
+                        manager->deallocatePage(page);  // Deallocate each physical page
+                    }
+                }
+                delete entry;  // Clear the second-level page table
             }
         }
-        pageTable.clear();  // Clear the page table
+        pageTable1.clear();  // Clear the first-level page table
     }
 
     int getPageHits() const {

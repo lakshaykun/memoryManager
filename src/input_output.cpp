@@ -29,7 +29,7 @@ void Trace_file_task(const string& filename){
        
         address=address.substr(2);
         size_t address_hex=stoull(address,nullptr,16);
-        
+        cout << address_hex << endl;
         size_t size_dec=stoull(size.substr(0,size.find("KB")))*1024;
         taskManager.addTask(taskid, address_hex, size_dec);
         
@@ -51,6 +51,6 @@ int main(){
     // Remove a task from the TaskManager
     
     // Display tasks
-    taskManager.displayTasks();
+    // taskManager.displayTasks();
     return 0;
 }

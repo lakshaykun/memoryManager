@@ -18,11 +18,11 @@ class Task {
         TaskMulti* taskMulti;
 
     public:
-        Task(string id, MemoryManager* &manager, PageTable* primaryPageTable) {
+        Task(string id, MemoryManager* &manager) {
             this->id = id;
             this->taskMap = new TaskMap(id, manager);
             this->taskSingle = new TaskSingle(id, manager);
-            this->taskMulti = new TaskMulti(id, manager, primaryPageTable);
+            this->taskMulti = new TaskMulti(id, manager);
         }
 
         void requestMemory(int logicalAddress, size_t size) {
@@ -48,12 +48,11 @@ class TaskManager {
         MemoryManager* manager = new MemoryManager(physicalMemorySize, virtualMemorySize, pageSize);
         vector<int> pageHits = vector<int>(3,0);
         vector<double> executionTime = vector<double>(3,0);
-        PageTable primaryPageTable = PageTable(pageTableSize1, nullptr);
 
     public:
         void addTask(string id, int logicalAddress, size_t size){
             if (tasks.find(id) == tasks.end()){
-                tasks[id] = new Task(id, manager, &primaryPageTable);
+                tasks[id] = new Task(id, manager);
             }
             tasks[id]->requestMemory(logicalAddress, size);
         }
