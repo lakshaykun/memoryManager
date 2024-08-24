@@ -29,7 +29,6 @@ public:
           physical_pages_allocated(0),
           current_phy_page(0),
           arr(phy / page, false) // Initialize vector arr with physical_pages elements set to false
-<<<<<<< HEAD
     {}
 
     // Function to allocate a page
@@ -46,27 +45,6 @@ public:
                 for (size_t i = 0; i < physical_pages; ++i) {
                     if (!arr[i]) {
                         arr[i] = true;
-=======
-    {
-        // Constructor body (if needed)
-    }
-   
-    int allocatePage(){
-        if(physical_pages_available>=1){
-            physical_pages_allocated+=1;
-            physical_pages_available-=1;
-            physical_memory-=page_size;
-            
-            if(current_phy_page<physical_pages){
-                arr[current_phy_page]=1;
-                current_phy_page+=1;
-                return current_phy_page-1;
-            }
-            else{
-                for(size_t i=0;i<physical_pages;i++){
-                    if(arr[i]==0){
-                        arr[i]=1;
->>>>>>> ffae398 (commit)
                         return i;
                     }
                 }
