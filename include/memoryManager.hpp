@@ -76,7 +76,7 @@ void displayMemory() const {
 
     // Print the results with 2 decimal places
     std::cout << "PHYSICAL MEMORY : " << std::fixed << std::setprecision(2) << physicalMemoryGB << " GB" << std::endl;
-    std::cout << "VIRTUAL MEMORY  : " << std::fixed << std::setprecision(2) << virtualMemoryGB << " GB" << std::endl;
+    
     std::cout << "PHYSICAL PAGES ALLOCATED : " << physical_pages_allocated << std::endl;
     std::cout << "PHYSICAL PAGES AVAILABLE : " << physical_pages_available << std::endl;
 }
