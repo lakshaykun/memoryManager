@@ -14,8 +14,8 @@ private:
     size_t physical_pages_allocated;
     size_t physical_pages;
     size_t current_phy_page;
-    std::vector<int> task;
-    std::vector<bool> arr;
+    
+   vector<bool> arr;
 
 public:
     // Constructor
@@ -66,6 +66,13 @@ public:
             
 
     }
+     void DisplayMemory(){
+        cout<<"PHYSICAL MEMORY : "<<physical_memory<<endl;
+        cout<<"VIRTUAL MEMORY : " <<virtual_memory<<endl;
+        cout<<"PHYSICAL PAGES ALLOCATED : "<<physical_pages_allocated<<endl;
+
+    }
+
 };
 
 #endif // MEMORY_MANAGER
