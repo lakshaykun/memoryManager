@@ -10,7 +10,7 @@ int main() {
     // Create a TaskManager object
     TaskManager taskManager;
     // Add a task to the TaskManager
-    taskManager.addTask("T1", 4000, 16);
+    taskManager.addTask("T1", 0704004000, 16);
     // Display tasks
     taskManager.displayTasks();
     // Remove a task from the TaskManager

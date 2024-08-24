@@ -4,11 +4,13 @@
 #include <stdio.h>
 #include <string>
 #include <map>
-#include "../include/config.hpp"
+#include "config.hpp"
 #include "memoryManager.hpp"
 #include "task.hpp"
 using namespace std;
 
+
+typedef vector<MemoryManager> Managers;
 
 class Task {
     private:
@@ -18,11 +20,11 @@ class Task {
         TaskMulti* taskMulti;
 
     public:
-        Task(string id, MemoryManager* &manager) {
+        Task(string id, Managers* const &managers) {
             this->id = id;
-            this->taskMap = new TaskMap(id, manager);
-            this->taskSingle = new TaskSingle(id, manager);
-            this->taskMulti = new TaskMulti(id, manager);
+            this->taskMap = new TaskMap(id, &managers->at(0));
+            this->taskSingle = new TaskSingle(id, &managers->at(1));
+            this->taskMulti = new TaskMulti(id, &managers->at(2));
         }
 
         void requestMemory(int logicalAddress, size_t size) {
@@ -45,15 +47,14 @@ class Task {
 class TaskManager {
     private:
         map<string, Task*> tasks;
-        
-        MemoryManager* manager = new MemoryManager(physicalMemorySize, virtualMemorySize, pageSize);
+        Managers managers = Managers(3, MemoryManager(physicalMemorySize, virtualMemorySize, pageSize));
         vector<int> pageHits = vector<int>(3,0);
         vector<double> executionTime = vector<double>(3,0);
 
     public:
         void addTask(string id, int logicalAddress, size_t size){
             if (tasks.find(id) == tasks.end()){
-                tasks[id] = new Task(id, manager);
+                tasks[id] = new Task(id, &managers);
             }
             tasks[id]->requestMemory(logicalAddress, size);
         }
