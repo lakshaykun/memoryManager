@@ -164,8 +164,9 @@ private:
     TaskMap* taskMap;
     TaskSingle* taskSingle;
     TaskMulti* taskMulti;
-    vector<long long> pageHits;
+    vector<int> pageHits;
     vector<double> executionTime;
+    vector<int> pageMiss;
 
 public:
     Task(const string& id, Managers* const &managers)
@@ -174,7 +175,8 @@ public:
           taskSingle(new TaskSingle(id, &managers->at(1))),
           taskMulti(new TaskMulti(id, &managers->at(2))),
           pageHits(3, 0),
-          executionTime(3, 0.0) {}
+          executionTime(3, 0.0),
+          pageMiss(3,0) {}
 
     ~Task() {
         delete taskMap;
@@ -198,7 +200,7 @@ public:
         return {taskMap->getPageTableSize(), taskSingle->getPageTableSize(), taskMulti->getPageTableSize()};
     }
 
-    vector<long long> getPageHits() {
+    vector<int> getPageHits() {
         pageHits[0] = taskMap->getPageHit();
         pageHits[1] = taskSingle->getPageHit();
         pageHits[2] = taskMulti->getPageHit();
@@ -211,20 +213,33 @@ public:
         executionTime[2] = taskMulti->getExecutionTime();
         return executionTime;
     }
+
+    string getTaskId() const {
+        return id;
+    }
+
+    vector<int> getPageMiss() {
+        pageMiss[0] = taskMap->getPageMiss();
+        pageMiss[1] = taskSingle->getPageMiss();
+        pageMiss[2] = taskMulti->getPageMiss();
+        return pageMiss;
+    }
 };
 
 class TaskManager {
 private:
     map<string, Task*> tasks;
     Managers managers;
-    vector<long long> pageHits;
+    vector<int> pageHits;
     vector<double> executionTime;
+    vector<int> pageMiss;
 
 public:
     TaskManager() 
         : managers(3, MemoryManager(physicalMemorySize, virtualMemorySize, pageSize)),
           pageHits(3, 0), 
-          executionTime(3, 0.0) {}
+          executionTime(3, 0.0),
+          pageMiss(3,0) {}
 
     ~TaskManager() {
         for (auto& task : tasks) {
@@ -264,7 +279,7 @@ public:
     void calculatePageHits() {
         fill(pageHits.begin(), pageHits.end(), 0);
         for (const auto& task : tasks) {
-            vector<long long> hits = task.second->getPageHits();
+            vector<int> hits = task.second->getPageHits();
             for (int i = 0; i < 3; ++i) {
                 pageHits[i] += hits[i];
             }
@@ -281,12 +296,30 @@ public:
         }
     }
 
+    void calculatePageMiss() {
+        fill(pageMiss.begin(), pageMiss.end(), 0);
+        for (const auto& task : tasks) {
+            vector<int> misses = task.second->getPageMiss();
+            for (int i = 0; i < 3; ++i) {
+                pageMiss[i] += misses[i];
+            }
+        }
+    }
+
     void displayPageHits() {
         calculatePageHits();
         cout << "Page Hits:\n";
         cout << " Map Implementation: " << pageHits[0] << endl;
         cout << " Single Level Implementation: " << pageHits[1] << endl;
         cout << " Multi-Level Implementation: " << pageHits[2] << endl;
+    }
+
+    void displayPageMiss() {
+        calculatePageMiss();
+        cout << "Page Miss:\n";
+        cout << " Map Implementation: " << pageMiss[0] << endl;
+        cout << " Single Level Implementation: " << pageMiss[1] << endl;
+        cout << " Multi-Level Implementation: " << pageMiss[2] << endl;
     }
 
     void displayExecutionTime() {
@@ -301,6 +334,13 @@ public:
         for (const auto& manager : managers) {
             manager.displayMemory();
         }
+    }
+
+    void Performance() {
+        displayPageHits();
+        displayExecutionTime();
+        displayPageMiss();
+        displayTasks();
     }
 };
 

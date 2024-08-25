@@ -49,8 +49,6 @@ int main(){
     
     // Add a task to the TaskManager
     taskManager.displayMemoryManager();
-    taskManager.displayPageHits();
-    taskManager.displayExecutionTime();
-    taskManager.displayTasks();
+    taskManager.Performance();
     return 0;
 }

@@ -296,6 +296,8 @@ public:
             if (pageTable[virtualPage] != -1) {
                 ++pageHit;
                 continue;
+            } else {
+                ++pageMiss;
             }
 
             int physicalPage = manager->allocatePage();
@@ -303,7 +305,6 @@ public:
                 pageTable[virtualPage] = physicalPage;
             } else {
                 cerr << "No free physical pages available for task " << id << "\n";
-                ++pageMiss;
                 break;
             }
         }
@@ -335,6 +336,10 @@ public:
     double getExecutionTime() const {
         return executionTime;
     }
+
+    size_t getPageMiss() const {
+        return pageMiss;
+    }
 };
 
 // TaskSingle class uses a single-level page table implemented as a vector
@@ -361,6 +366,8 @@ public:
             if (pageTable[virtualPage] != -1) {
                 ++pageHit;
                 continue;
+            } else {
+                ++pageMiss;
             }
 
             int physicalPage = manager->allocatePage();
@@ -368,7 +375,6 @@ public:
                 pageTable[virtualPage] = physicalPage;
             } else {
                 cerr << "No free physical pages available for task " << id << "\n";
-                ++pageMiss;
                 break;
             }
         }
@@ -399,6 +405,10 @@ public:
 
     double getExecutionTime() const {
         return executionTime;
+    }
+
+    size_t getPageMiss() const {
+        return pageMiss;
     }
 };
 
@@ -432,6 +442,8 @@ public:
             if (pageTable1[vpn1]->at(vpn2) != -1) {
                 ++pageHits;
                 continue;
+            } else {
+                ++pageMiss;
             }
 
             int physicalPage = manager->allocatePage();
@@ -439,7 +451,6 @@ public:
                 pageTable1[vpn1]->at(vpn2) = physicalPage;
             } else {
                 cerr << "No free physical pages available for task " << id << "\n";
-                ++pageMiss;
                 break;
             }
         }
@@ -481,6 +492,10 @@ public:
 
     double getExecutionTime() const {
         return executionTime;
+    }
+
+    size_t getPageMiss() const {
+        return pageMiss;
     }
 };
 
