@@ -165,8 +165,8 @@ public:
 class TaskMulti {
 private:
     string id;  // Unique identifier for the task
-    PageTable pageTable1 = PageTable(pageTableSize1, nullptr); // Polong longer to the first-level page table
-    MemoryManager* manager;  // Polong longer to the memory manager to allocate/deallocate pages
+    PageTable pageTable1 = PageTable(pageTableSize1, nullptr); //first-level page table
+    MemoryManager* manager;  // memory manager to allocate/deallocate pages
     long long pageHits = 0;  // Counter for page hits
     long long pageMiss = 0;
     double executionTime = 0;
@@ -213,10 +213,10 @@ public:
         size_t size = 0;
         for (const auto& entry : pageTable1) {
             if (entry != nullptr) {
-                size += entry->size() * sizeof(long long);  // Calculate size of second-level page table
+                size += entry->size() * pteSize2;  // Calculate size of second-level page table
             }
         }
-        return pageTable1.size() * sizeof(vector<long long>*) + size;  // Calculate size of first-level page table
+        return pageTable1.size() * pteSize1 + size;  // Calculate size of first-level page table
     }
 
     // Returns the unique identifier of the task

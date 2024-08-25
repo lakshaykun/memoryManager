@@ -40,7 +40,7 @@ void Trace_file_task(const string& filename){
 }
 
 int main(){
-    Trace_file_task("memory_traces.txt");
+    Trace_file_task("file.txt");
     
     // Create a TaskManager object
     

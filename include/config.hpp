@@ -4,8 +4,6 @@
 #include <stdio.h>
 #include <bits/stdc++.h>
 
-size_t addr = 32;
-
 size_t n = 33;
 size_t m = 34;
 size_t p = 10;
@@ -24,8 +22,8 @@ size_t physicalPages = physicalMemorySize/pageSize;
 // multi level page table
 size_t pageTableSize2 = 1 << (n-p)/2;
 size_t pageTableSize1 = 1 << (n-p-pageTableSize2);
-size_t pageTableEntrySize1 = 1 << (n-p-pageTableSize2);
-size_t pageTableEntrySize2 = 1 << (n-p)/2;
+size_t pteSize1 = n;
+size_t pteSize2 = m;
 
 
 // starting address of memory sections
