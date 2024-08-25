@@ -14,22 +14,22 @@ unsigned int generateRandomAddress(unsigned int start, unsigned int range) {
 // Function to generate a random task size that is a multiple of 4
 unsigned int generateTaskSize(int size) {
     // Generate task sizes that are multiples of 4 bytes
-    return (rand() % 16 + 1) * size; // Example: Random sizes between 4 and 64 bytes (multiples of 4)
+    return (rand() % 16 + 1) * size; 
 }
 
 int main() {
     int n;
     cout<<"Enter the number of traces line"<<endl;
     cin>>n;
-    // Seed the random number generator
+   
     srand(static_cast<unsigned int>(time(0)));
 
-    // Number of tasks (e.g., number of memory access traces)
+   
     int numTasks ;// You can change this as needed
     cout<<"Enter number of task"<<endl;
     cin>>numTasks;
     
-    cout<<"KB-->1 or MB--2"<<endl;
+    cout<<"File size in KB-->1 or MB-->2"<<endl;
     int kbormb;
     cin>>kbormb;
     string tasksize;
@@ -50,17 +50,9 @@ int main() {
         return 1;
     }
 
-    // // Define range for each section for generating addresses
-    // const unsigned int TEXT_RANGE = 0x1000;    // Example range for text section
-    // const unsigned int DATA_RANGE = 0x1000;    // Example range for data section
-    // const unsigned int STACK_RANGE = 0x1000;   // Example range for stack section
-    // const unsigned int SHARED = 0x1000; // Example range for shared library section
-    // const unsigned int HEAP_RANGE = 0x1000;    // Example range for heap section
-    // const unsigned int BSS = 0x1000;    // Example range for heap section
-
-    // Generate traces
+ 
     for (int i = 0; i < n; ++i) {
-        // Randomly choose a section for the task
+        
         unsigned int startAddress;
         unsigned int range;
         int randomNumber = rand() % numTasks + 1;
@@ -103,7 +95,7 @@ int main() {
         unsigned int address = generateRandomAddress(startAddress, range);
         unsigned int taskSize = generateTaskSize(size);
 
-        // Write the task ID, address, and task size to the trace file
+    
         traceFile << "T" << randomNumber
                  
                   << ":0x" << std::setw(8) << std::setfill('0') <<std::hex << address 
