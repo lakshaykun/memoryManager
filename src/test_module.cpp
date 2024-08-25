@@ -1,8 +1,8 @@
 #include <iostream>
 #include <fstream>
-#include <cstdlib>  // For rand() and srand()
-#include <ctime>    // For time()
-#include "../include/config.hpp" // Include the configuration file
+#include <cstdlib>  
+#include <ctime>   
+#include "../include/config.hpp" 
 using namespace std;
 
 // Function to generate random addresses aligned to the page size
@@ -50,13 +50,13 @@ int main() {
         return 1;
     }
 
-    // Define range for each section for generating addresses
-    const unsigned int TEXT_RANGE = 0x1000;    // Example range for text section
-    const unsigned int DATA_RANGE = 0x1000;    // Example range for data section
-    const unsigned int STACK_RANGE = 0x1000;   // Example range for stack section
-    const unsigned int SHARED = 0x1000; // Example range for shared library section
-    const unsigned int HEAP_RANGE = 0x1000;    // Example range for heap section
-    const unsigned int BSS = 0x1000;    // Example range for heap section
+    // // Define range for each section for generating addresses
+    // const unsigned int TEXT_RANGE = 0x1000;    // Example range for text section
+    // const unsigned int DATA_RANGE = 0x1000;    // Example range for data section
+    // const unsigned int STACK_RANGE = 0x1000;   // Example range for stack section
+    // const unsigned int SHARED = 0x1000; // Example range for shared library section
+    // const unsigned int HEAP_RANGE = 0x1000;    // Example range for heap section
+    // const unsigned int BSS = 0x1000;    // Example range for heap section
 
     // Generate traces
     for (int i = 0; i < n; ++i) {
@@ -70,32 +70,32 @@ int main() {
         switch (sectionType) {
             case 0:
                 startAddress = Text;
-                range = TEXT_RANGE;
+                range = rangeText;
                 sectionName = "Text";
                 break;
             case 1:
                 startAddress = Data;
-                range = DATA_RANGE;
+                range = rangeData;
                 sectionName = "Data";
                 break;
             case 2:
                 startAddress =Stack;
-                range = STACK_RANGE;
+                range = rangeStack;
                 sectionName = "Stack";
                 break;
             case 3:
                 startAddress = Shared;
-                range = SHARED;
+                range = rangeShared;
                 sectionName = "SHARED";
                 break;
             case 4:
                 startAddress = Heap;
-                range = HEAP_RANGE;
+                range = rangeHeap;
                 sectionName = "Heap";
                 break;
              case 5:
                 startAddress = Bss;
-                range = BSS;
+                range =rangeBss;
                 sectionName = "Bss";
                 break;
         }
@@ -106,7 +106,7 @@ int main() {
         // Write the task ID, address, and task size to the trace file
         traceFile << "T" << randomNumber
                  
-                  << ":0x" << std::hex << address 
+                  << ":0x" << std::setw(8) << std::setfill('0') <<std::hex << address 
                   << ":" << std::dec << taskSize << tasksize<<"\n";
     }
 
