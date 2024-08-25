@@ -36,4 +36,11 @@ size_t Heap = 0x50000000;
 size_t Shared = 0x40000000;
 size_t Stack = 0xbfffb000;
 
+size_t rangeText = Data - Text;
+size_t rangeData = Bss - Data;
+size_t rangeBss = Heap - Bss;
+size_t rangeHeap = Shared - Heap;
+size_t rangeShared = Stack - Shared;
+size_t rangeStack = 0xffffffff - Stack;
+
 #endif

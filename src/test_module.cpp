@@ -28,9 +28,7 @@ int main() {
     int numTasks ;// You can change this as needed
     cout<<"Enter number of task"<<endl;
     cin>>numTasks;
-    cout<<"Enter minimum file size number only"<<endl;
-    int size;
-    cin>>size;
+    
     cout<<"KB-->1 or MB--2"<<endl;
     int kbormb;
     cin>>kbormb;
@@ -41,6 +39,9 @@ int main() {
     else{
         tasksize="MB";
     }
+    cout<<"Enter minimum file size number only"<<endl;
+    int size;
+    cin>>size;
 
     // Open a file to write the generated traces
     std::ofstream traceFile("memory_traces.txt");

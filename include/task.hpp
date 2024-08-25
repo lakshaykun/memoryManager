@@ -64,7 +64,7 @@ public:
 
     // Returns the size of the page table in bytes
     size_t getPageTableSize() const {
-        return pageTable.size() * (sizeof(long long) + sizeof(long long));  // Calculate size of map entries
+        return pageTable.size() * (sizeof(int) + sizeof(int));  // Calculate size of map entries
     }
 
     // Returns the unique identifier of the task
@@ -93,7 +93,7 @@ public:
 class TaskSingle {
 private:
     string id;  // Unique identifier for the task
-    vector<long long> pageTable = vector<long long>(virtualPages, -1);  // Page table as a vector where each index is a virtual page number
+    vector<int> pageTable = vector<int>(virtualPages, -1);  // Page table as a vector where each index is a virtual page number
     MemoryManager* manager;  // Polong longer to the memory manager to allocate/deallocate pages
     long long pageHit = 0;  // Counter for page hits
     long long pageMiss = 0;
@@ -144,7 +144,7 @@ public:
 
     // Deallocates all pages used by this task and clears the page table
     void deallocateMemory() {
-        for (long long entry : pageTable) {
+        for (int entry : pageTable) {
             if (entry != -1) {
                 manager->deallocatePage(entry);  // Deallocate each physical page
             }
@@ -182,11 +182,11 @@ public:
         long long pageReq = (size + pageSize - 1) / pageSize;  // Calculate required pages, rounding up
         for (long long i = 0; i < pageReq; i++) {
             // Calculate the first and second-level page table indices
-                long long vpn1 = (logicalAddress >> 22) & ((1LL << 10) - 1);  // Extracting the first 10 bits
-                long long vpn2 = (logicalAddress >> 12) & ((1LL << 10) - 1);  // Extracting the next 10 bits
+                int vpn1 = (logicalAddress >> 22) & ((1LL << 10) - 1);  // Extracting the first 10 bits
+                int vpn2 = (logicalAddress >> 12) & ((1LL << 10) - 1);  // Extracting the next 10 bits
             // Check if the first-level page table entry is present; if not, create it
             if (pageTable1.at(vpn1) == nullptr) {
-                pageTable1.at(vpn1) = new vector<long long>(pageTableSize2, -1);  // Map first-level to second-level page table
+                pageTable1.at(vpn1) = new vector<int>(pageTableSize2, -1);  // Map first-level to second-level page table
             }
 
             // Check if the second-level page table entry is a page hit
@@ -196,7 +196,7 @@ public:
             }
 
             // Allocate a new physical page if not present
-            long long physicalPage = manager->allocatePage();
+            int physicalPage = manager->allocatePage();
             if (physicalPage != -1) {
                 pageTable1.at(vpn1)->at(vpn2) = physicalPage;  // Map virtual to physical page
             } else {
