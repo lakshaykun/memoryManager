@@ -29,7 +29,7 @@ int main() {
     cout<<"Enter number of task"<<endl;
     cin>>numTasks;
     
-    cout<<"KB-->1 or MB--2"<<endl;
+    cout<<"File size in KB-->1 or MB-->2"<<endl;
     int kbormb;
     cin>>kbormb;
     string tasksize;

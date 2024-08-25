@@ -40,7 +40,10 @@ void Trace_file_task(const string& filename){
 }
 
 int main(){
-    Trace_file_task("file.txt");
+    string file;
+    cout<<"ENTER FILE PATH"<<endl;
+    cin>>file;
+    Trace_file_task(file);
     
     // Create a TaskManager object
     
