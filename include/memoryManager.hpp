@@ -14,7 +14,6 @@ private:
     size_t physical_pages_allocated;
     size_t physical_pages;
     size_t current_phy_page;
-    size_t current_vir_page;
     
     std::vector<bool> arr;
 
@@ -29,7 +28,6 @@ public:
           virtual_pages(vir / page),
           physical_pages_allocated(0),
           current_phy_page(0),
-          current_vir_page(virtual_pages),
           arr(phy / page, false) // Initialize vector arr with physical_pages elements set to false
     {}
 
@@ -40,9 +38,8 @@ public:
             physical_pages_available--;
             physical_memory -= page_size;
 
-            if (current_phy_page < physical_pages & current_vir_page > 0) {
+            if (current_phy_page < physical_pages) {
                 arr[current_phy_page] = true;
-                current_vir_page--;
                 return current_phy_page++;
             } else {
                 for (size_t i = 0; i < physical_pages; ++i) {

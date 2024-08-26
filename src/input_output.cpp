@@ -39,6 +39,7 @@ void Trace_file_task(const string& filename){
         bool alert = taskManager.addTask(taskid, address_hex, size_dec);
         if (!alert) {
             cerr << "Memory allocation failed for task " << taskid << "\n";
+            break;
         }
     }
 }
