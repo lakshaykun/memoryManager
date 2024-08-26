@@ -108,12 +108,26 @@ void writeMetricsToCSV( TaskManager& taskManager, const string& filename) {
 
     // Retrieve summary metrics from TaskManager
     auto summaryMetrics = taskManager.metrics();
+    auto memoryMetrics = taskManager.memoryManagerMetrics();
+
     
     // Write summary values to the CSV file
     csvFile << "Total Page Hits," << summaryMetrics[0] << "\n";
     csvFile << "Total Page Misses," << summaryMetrics[1] << "\n";
     csvFile << "Total Execution Time," << summaryMetrics[2] << "\n";
-    
+     csvFile << "\nMemory Manager Summary\n\n";
+    double physicalMemoryGB = static_cast<double>(memoryMetrics[0]) / (1024 * 1024 * 1024);
+    double virtualMemoryGB = static_cast<double>(memoryMetrics[1]) / (1024 * 1024 * 1024);
+    csvFile << "Physical Memory (GB)," << physicalMemoryGB << "\n";
+    csvFile << "Virtual Memory (GB)," << virtualMemoryGB << "\n";
+    csvFile << "Page Size," << memoryMetrics[2] << " bytes\n";
+    csvFile << "Total Physical Pages," << memoryMetrics[3] << "\n";
+    csvFile << "Total Virtual Pages," << memoryMetrics[4] << "\n";
+    csvFile << "Virtual Pages Available," << memoryMetrics[5] << "\n";
+    csvFile << "Physical Pages Available," << memoryMetrics[6] << "\n";
+    csvFile << "Physical Pages Allocated," << memoryMetrics[7] << "\n";
+
+   
 
     csvFile.close();
     if (csvFile.fail()) {
