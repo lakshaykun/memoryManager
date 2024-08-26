@@ -11,28 +11,10 @@
 
 using namespace std;
 
-        istringstream iss(line);
-        getline(iss,taskid,':');
-        getline(iss,address,':');
-        getline(iss,size);
-       
-        address=address.substr(2);
-        size_t address_hex=stoull(address,nullptr,16);
-        size_t size_dec;
-        if (size.find("KB") != string::npos) {
-        size_dec = stoull(size.substr(0, size.find("KB"))) * 1024;
-        }
-     else if (size.find("MB") != string::npos) {
-        size_dec = stoull(size.substr(0, size.find("MB"))) * 1024 * 1024;
-     }
-       
-        bool alert = taskManager.addTask(taskid, address_hex, size_dec);
-        if (!alert) {
-            cerr << "Memory allocation failed for task " << taskid << "\n";
-            break;
-        }
-    }
-}
+// Initialize the TaskManager object
+TaskManager taskManager(0);
+
+// Helper function to extract numeric part of a string (e.g., "t10" -> 10)
 int extractNumericPart(const std::string& s) {
     std::stringstream ss(s.substr(1)); // Remove the leading character and convert the rest to an integer
     int num = 0;
@@ -133,6 +115,7 @@ void writeMetricsToCSV( TaskManager& taskManager, const string& filename) {
     csvFile << "Total Page Hits," << summaryMetrics[0] << "\n";
     csvFile << "Total Page Misses," << summaryMetrics[1] << "\n";
     csvFile << "Total Execution Time," << summaryMetrics[2] << "\n";
+    
 
     csvFile.close();
     if (csvFile.fail()) {
@@ -150,7 +133,7 @@ int main() {
     taskManager.displayMemoryManager();
     
     // Write the metrics to a CSV file
-    writeMetricsToCSV(taskManager, "tasks_metrics.csv");
+    writeMetricsToCSV(taskManager, "tasks_map.csv");
 
     return 0;
 }
