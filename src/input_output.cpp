@@ -43,7 +43,17 @@ void Trace_file_task(const string& filename){
         }
     }
 }
+int extractNumericPart(const std::string& s) {
+    std::stringstream ss(s.substr(1)); // Remove the leading character and convert the rest to an integer
+    int num = 0;
+    ss >> num;
+    return num;
+}
 
+// Comparator function to sort based on the numeric part of the task ID
+bool compareTaskIDs(const std::string& id1, const std::string& id2) {
+    return extractNumericPart(id1) < extractNumericPart(id2);
+}
 void writeMetricsToCSV(const TaskManager& taskManager, const std::string& filename) {
     std::ofstream csvFile(filename);
 
@@ -53,14 +63,24 @@ void writeMetricsToCSV(const TaskManager& taskManager, const std::string& filena
     // Fetch the metrics (already sorted by task ID)
     std::map<std::string, std::vector<double>> metrics = taskManager.tasksMetrics();
 
-    // Write each task's metrics to the CSV file
+    // Collect task IDs for custom sorting
+    std::vector<std::string> taskIDs;
     for (const auto& entry : metrics) {
-        csvFile << entry.first << ","; // Task ID
+        taskIDs.push_back(entry.first);
+    }
+
+    // Sort task IDs using the custom comparator
+    std::sort(taskIDs.begin(), taskIDs.end(), compareTaskIDs);
+
+    // Write each task's metrics to the CSV file
+    for (const auto& taskID : taskIDs) {
+        const auto& entry = metrics[taskID];
+        csvFile << taskID << ","; // Task ID
 
         // Write metrics, comma-separated
-        for (size_t i = 0; i < entry.second.size(); ++i) {
-            csvFile << entry.second[i];
-            if (i < entry.second.size() - 1) {
+        for (size_t i = 0; i < entry.size(); ++i) {
+            csvFile << entry[i];
+            if (i < entry.size() - 1) {
                 csvFile << ",";
             }
         }
@@ -72,7 +92,6 @@ void writeMetricsToCSV(const TaskManager& taskManager, const std::string& filena
         std::cerr << "Failed to write to file: " << filename << "\n";
     }
 }
-
 int main(){
     string file;
     cout<<"ENTER FILE PATH"<<endl;
