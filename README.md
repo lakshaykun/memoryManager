@@ -1,6 +1,3 @@
-Here’s a comprehensive `README.md` file for your project, incorporating the details and requirements you've shared:
-
----
 
 # Memory Management System
 
