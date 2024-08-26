@@ -59,6 +59,8 @@ int main() {
         std::string sectionName;
 
         int sectionType = rand() % 5;
+
+        // Generate a random address based on the section type
         switch (sectionType) {
             case 0:
                 startAddress = Text;
@@ -92,12 +94,13 @@ int main() {
                 break;
         }
 
+        // Generate a random address and task size
         unsigned int address = generateRandomAddress(startAddress, range);
         unsigned int taskSize = generateTaskSize(size);
 
-    
+        // Write the generated trace to the file
         traceFile << "T" << randomNumber
-                 
+
                   << ":0x" << std::setw(8) << std::setfill('0') <<std::hex << address 
                   << ":" << std::dec << taskSize << tasksize<<"\n";
     }

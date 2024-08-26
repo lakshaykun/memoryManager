@@ -5,11 +5,10 @@
 #include <bits/stdc++.h>
 #include <cmath>
 
-size_t n = 34;
-size_t m = 34;
-size_t p = 14;
-
-//
+// configurable parameters
+size_t n = 32;
+size_t m = 32;
+size_t p = 12;
 size_t pageSize = (1LL<<p);
 size_t virtualMemorySize = (1LL<<n);
 size_t physicalMemorySize = (1LL<<m);
@@ -37,6 +36,7 @@ size_t Heap = 0x50000000;
 size_t Shared = 0x40000000;
 size_t Stack = 0xbfffb000;
 
+// range of memory sections
 size_t rangeText = Data - Text;
 size_t rangeData = Bss - Data;
 size_t rangeBss = Heap - Bss;

@@ -7,7 +7,7 @@ Develop a memory management system in C/C++ that fulfills the following specific
 
 - **Memory Manager**: Manages physical pages, allocating pages upon request.
 - **Task**: Each instance has its own page table and requests memory from the memory manager based on a trace file.
-- **Performance Module**: Computes memory usage, including page tables, allocated memory, and available memory, and reports invalid page number,execution times and performance metrics.
+- **Performance Module**: Computes memory usage, including page tables, allocated memory, and available memory, execution times.
 - **Input/Output Module**: Reads a trace file, invoking tasks based on the file contents.
 
 ## Specifications
@@ -26,6 +26,11 @@ Develop a memory management system in C/C++ that fulfills the following specific
    - Computes memory requirements for page tables.
    - Reports allocated memory and available (free) physical memory.
    - Measures page hits and misses for each task.
+   - Calculates execution times for each task.
+   - Measures memory usage for each task.
+   - Measures memory usage for each page table implementation.
+   - Measures invalid virtual page numbers.
+
    
 4. **Input/Output Module**:
    - Reads trace files with tasks' memory requests.
@@ -83,6 +88,7 @@ This command will compile the source files and generate executables in the `./bi
 ### Running
 
 To run the application:
+After make run command, the application will ask for the trace file name. You can provide the trace file name as input without extension.
 
 ```bash
 make run

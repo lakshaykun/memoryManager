@@ -54,11 +54,13 @@ public:
             auto start = chrono::high_resolution_clock::now();
             size_t virtualPage = (logicalAddress >> p) + i;  // Calculate the virtual page number
             
+            // Check if the virtual page is valid
             if (virtualPage >= virtualPages) {
                 ++invalidVirtualPages;
                 continue;
             }
 
+            // Check if the page is already mapped
             if (pageTable[virtualPage] != -1) {
                 ++pageHit;
                 continue;
@@ -66,6 +68,7 @@ public:
                 ++pageMiss;
             }
 
+            // Allocate a physical page and update the page table
             size_t physicalPage = manager->allocatePage();
             if (physicalPage != -1) {
                 pageTable[virtualPage] = physicalPage;
@@ -80,30 +83,37 @@ public:
         return 1;
     }
 
+    // Returns the size of the page table
     size_t getPageTableSize() const {
         return pageTable.size() * (pteSize1 + pteSize2);
     }
 
+    // Returns the task ID
     const string& getTaskId() const {
         return id;
     }
 
+    // Returns the number of page hits
     size_t getPageHit() const {
         return pageHit;
     }
 
+    // Returns the execution time
     double getExecutionTime() const {
         return executionTime;
     }
 
+    // Returns the number of page misses
     size_t getPageMiss() const {
         return pageMiss;
     }
 
+    // Returns the amount of memory allocated
     size_t memoryAllocated() const {
         return pagesAllocated * pageSize;
     }
 
+    // Returns the number of invalid virtual pages
     size_t getInvalidVirtualPages() const {
         return invalidVirtualPages;
     }
@@ -149,11 +159,13 @@ public:
             auto start = chrono::high_resolution_clock::now();
             size_t virtualPage = (logicalAddress >> p) + i; // Calculate the virtual page number
 
+            // Check if the virtual page is valid
             if (virtualPage >= virtualPages) {
                 ++invalidVirtualPages;
                 continue;
             }
 
+            // Check if the page is already mapped
             if (pageTable[virtualPage] != -1) {
                 ++pageHit;
                 continue;
@@ -161,6 +173,7 @@ public:
                 ++pageMiss;
             }
 
+            // Allocate a physical page and update the page table
             size_t physicalPage = manager->allocatePage();
             if (physicalPage != -1) {
                 pageTable[virtualPage] = physicalPage;
@@ -175,30 +188,37 @@ public:
         return 1;
     }
 
+    // Returns the size of the page table
     size_t getPageTableSize() const {
         return pageTable.size() * pteSize2;
     }
 
+    // Returns the task ID
     const string& getTaskId() const {
         return id;
     }
 
+    // Returns the number of page hits
     size_t getPageHit() const {
         return pageHit;
     }
 
+    // Returns the execution time
     double getExecutionTime() const {
         return executionTime;
     }
 
+    // Returns the number of page misses
     size_t getPageMiss() const {
         return pageMiss;
     }
 
+    // Returns the amount of memory allocated
     size_t memoryAllocated() const {
         return pagesAllocated * pageSize;
     }
 
+    // Returns the number of invalid virtual pages
     size_t getInvalidVirtualPages() const {
         return invalidVirtualPages;
     }
@@ -243,17 +263,20 @@ public:
             auto start = chrono::high_resolution_clock::now();
             size_t virtualPage = (logicalAddress >> p) + i; // Calculate the virtual page number
 
+            // Check if the virtual page is valid
             if (virtualPage >= virtualPages) {
                 ++invalidVirtualPages;
                 continue;
             }
 
+            // Calculate the VPNs for the two-level page table
             size_t vpn1 = (virtualPage >> pts2);
             size_t vpn2 = (virtualPage) & ((1LL << pts2) - 1);
             if (pageTable1[vpn1] == nullptr) {
                 pageTable1[vpn1] = new vector<size_t>(pageTableSize2, -1);
             }
 
+            // Check if the page is already mapped
             if (pageTable1[vpn1]->at(vpn2) != -1) {
                 ++pageHits;
                 continue;
@@ -261,6 +284,7 @@ public:
                 ++pageMiss;
             }
 
+            // Allocate a physical page and update the page table
             size_t physicalPage = manager->allocatePage();
             if (physicalPage != -1) {
                 pageTable1[vpn1]->at(vpn2) = physicalPage;
@@ -275,6 +299,7 @@ public:
         return 1;
     }
 
+    // Returns the size of the page table
     size_t getPageTableSize() const {
         size_t size = 0;
         for (const auto& entry : pageTable1) {
@@ -285,26 +310,32 @@ public:
         return pageTable1.size() * pteSize1 + size;
     }
 
+    // Returns the task ID
     const string& getTaskId() const {
         return id;
     }
 
+    // Returns the number of page hits
     size_t getPageHit() const {
         return pageHits;
     }
 
+    // Returns the execution time
     double getExecutionTime() const {
         return executionTime;
     }
 
+    // Returns the number of page misses
     size_t getPageMiss() const {
         return pageMiss;
     }
 
+    // Returns the amount of memory allocated
     size_t memoryAllocated() const {
         return pagesAllocated * pageSize;
     }
 
+    // Returns the number of invalid virtual pages
     size_t getInvalidVirtualPages() const {
         return invalidVirtualPages;
     }

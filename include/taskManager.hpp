@@ -43,6 +43,7 @@ public:
         }
     }
 
+    // request memory for the task
     bool requestMemory(long long logicalAddress, size_t size) {
         // switch case
         bool alert = false;
@@ -56,6 +57,7 @@ public:
         return alert;
     }
 
+    // get the size of the page table
     double getPageTableSize() const {
         double pageTableSizeInKB;
 
@@ -77,7 +79,7 @@ public:
     return pageTableSizeInKB;
 }
 
-
+    // get the number of page hits
     size_t getPageHits() {
         // switch case
         if (type == 0) {
@@ -89,6 +91,7 @@ public:
         }
     }
 
+    // get the execution time
     double getExecutionTime() {
         // switch case
         if (type == 0) {
@@ -100,10 +103,12 @@ public:
         }
     }
 
+    // get the task ID
     string getTaskId() const {
         return id;
     }
 
+    // get the number of page misses
     size_t getPageMiss() {
         // switch case
         if (type == 0) {
@@ -115,30 +120,33 @@ public:
         }
     }
 
-   double getMemoryAllocated() const {
-    double memoryInKB;
-    
-    if (type == 0) {
-        memoryInKB = static_cast<double>(taskMap->memoryAllocated()) / 1024.0;
-    } else if (type == 1) {
-        memoryInKB = static_cast<double>(taskSingle->memoryAllocated()) / 1024.0;
-    } else {
-        memoryInKB = static_cast<double>(taskMulti->memoryAllocated()) / 1024.0;
+    // get the amount of memory allocated
+    double getMemoryAllocated() const {
+        double memoryInKB;
+        
+        // switch case
+        if (type == 0) {
+            memoryInKB = static_cast<double>(taskMap->memoryAllocated()) / 1024.0;
+        } else if (type == 1) {
+            memoryInKB = static_cast<double>(taskSingle->memoryAllocated()) / 1024.0;
+        } else {
+            memoryInKB = static_cast<double>(taskMulti->memoryAllocated()) / 1024.0;
+        }
+
+        return memoryInKB;
     }
 
-    return memoryInKB;
-}
-    
-        size_t getInvalidVirtualPages() {
-            // switch case
-            if (type == 0) {
-                return taskMap->getInvalidVirtualPages();
-            } else if (type == 1) {
-                return taskSingle->getInvalidVirtualPages();
-            } else {
-                return taskMulti->getInvalidVirtualPages();
-            }
+    // get the number of invalid virtual pages
+    size_t getInvalidVirtualPages() {
+        // switch case
+        if (type == 0) {
+            return taskMap->getInvalidVirtualPages();
+        } else if (type == 1) {
+            return taskSingle->getInvalidVirtualPages();
+        } else {
+            return taskMulti->getInvalidVirtualPages();
         }
+    }
 };
 
 class TaskManager {
@@ -152,7 +160,7 @@ private:
     
 
 public:
-
+    // Constructor
     TaskManager(const int& type) 
         : manager(MemoryManager(physicalMemorySize, virtualMemorySize, pageSize)),
           type(type){}
@@ -164,6 +172,7 @@ public:
         }
     }
 
+    // Add a task to the task manager
     bool addTask(const string& id, long long logicalAddress, size_t size) {
         if (tasks.find(id) == tasks.end()) {
             tasks[id] = new Task(id, &manager, type);
@@ -171,6 +180,7 @@ public:
         return tasks[id]->requestMemory(logicalAddress, size);
     }
 
+    // Calculate the number of page hits
     void calculatePageHits() {
         pageHits = 0;
         for (const auto& task : tasks) {
@@ -178,6 +188,7 @@ public:
         }
     }
 
+    // Calculate the execution time
     void calculateExecutionTime() {
         executionTime = 0;
         for (const auto& task : tasks) {
@@ -185,6 +196,7 @@ public:
         }
     }
 
+    // Calculate the number of page misses
     void calculatePageMiss() {
         pageMiss = 0;
         for (const auto& task : tasks) {
@@ -192,10 +204,12 @@ public:
         }
     }
 
+    // Display the memory manager
     void displayMemoryManager() const {
         manager.displayMemory();
     }
 
+    // fetch total metrics
     vector<double> metrics() {
         calculatePageHits();
         calculateExecutionTime();
@@ -203,6 +217,7 @@ public:
         return {pageHits, pageMiss, executionTime};
     }
 
+    // fetch task metrics
     map<string, vector<double>> tasksMetrics() const {
         map<string, vector<double>> metrics;
         for (const auto& task : tasks) {
@@ -218,6 +233,7 @@ public:
         return metrics;
     }
 
+    // fetch memory manager metrics
     vector<size_t> memoryManagerMetrics() const {
         return manager.getMemoryStatus();
     } 

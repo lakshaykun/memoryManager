@@ -75,7 +75,7 @@ public:
         }
     }
 
-
+    // Function to get the number of physical pages allocated
     void displayMemory() const {
         // Convert bytes to gigabytes
         double physicalMemoryGB = static_cast<double>(physical_memory) / (1024 * 1024 * 1024);
