@@ -22,6 +22,7 @@ private:
     size_t pageHit = 0;  // Counter for page hits
     size_t pageMiss = 0;  // Counter for page misses
     double executionTime = 0.0;  // Execution time tracking
+    int pagesAllocated = 0;  // Counter for pages allocated
 
 public:
     // Constructor initializes task ID and memory manager pointer
@@ -49,6 +50,7 @@ public:
             size_t physicalPage = manager->allocatePage();
             if (physicalPage != -1) {
                 pageTable[virtualPage] = physicalPage;
+                ++pagesAllocated;
             } else {
                 cerr << "No free physical pages available for task " << id << "\n";
                 break;
@@ -86,6 +88,10 @@ public:
     size_t getPageMiss() const {
         return pageMiss;
     }
+
+    size_t memoryAllocated() const {
+        return pagesAllocated * pageSize;
+    }
 };
 
 // TaskSingle class uses a single-level page table implemented as a vector
@@ -97,6 +103,7 @@ private:
     size_t pageHit = 0;  // Counter for page hits
     size_t pageMiss = 0;  // Counter for page misses
     double executionTime = 0.0;  // Execution time tracking
+    int pagesAllocated = 0;  // Counter for pages allocated
 
 public:
     // Constructor initializes task ID, memory manager pointer, and page table size
@@ -119,6 +126,7 @@ public:
             size_t physicalPage = manager->allocatePage();
             if (physicalPage != -1) {
                 pageTable[virtualPage] = physicalPage;
+                ++pagesAllocated;
             } else {
                 cerr << "No free physical pages available for task " << id << "\n";
                 break;
@@ -156,6 +164,10 @@ public:
     size_t getPageMiss() const {
         return pageMiss;
     }
+
+    size_t memoryAllocated() const {
+        return pagesAllocated * pageSize;
+    }
 };
 
 // TaskMulti class uses a multi-level page table implemented with vectors of vectors
@@ -167,6 +179,7 @@ private:
     size_t pageHits = 0;  // Counter for page hits
     size_t pageMiss = 0;  // Counter for page misses
     double executionTime = 0.0;  // Execution time tracking
+    size_t pagesAllocated = 0;  // Counter for pages allocated
 
 public:
     // Constructor initializes task ID, memory manager pointer, and the first-level page table size
@@ -195,6 +208,7 @@ public:
             size_t physicalPage = manager->allocatePage();
             if (physicalPage != -1) {
                 pageTable1[vpn1]->at(vpn2) = physicalPage;
+                ++pagesAllocated;
             } else {
                 cerr << "No free physical pages available for task " << id << "\n";
                 break;
@@ -242,6 +256,10 @@ public:
 
     size_t getPageMiss() const {
         return pageMiss;
+    }
+
+    size_t memoryAllocated() const {
+        return pagesAllocated * pageSize;
     }
 };
 

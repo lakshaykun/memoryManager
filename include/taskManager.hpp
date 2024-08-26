@@ -57,7 +57,7 @@ public:
         }
     }
 
-    int getPageTableSize() const {
+    size_t getPageTableSize() const {
         // switch case
         if (type == 0) {
             return taskMap->getPageTableSize();
@@ -68,7 +68,7 @@ public:
         }
     }
 
-    int getPageHits() {
+    size_t getPageHits() {
         // switch case
         if (type == 0) {
             return taskMap->getPageHit();
@@ -94,7 +94,7 @@ public:
         return id;
     }
 
-    int getPageMiss() {
+    size_t getPageMiss() {
         // switch case
         if (type == 0) {
             return taskMap->getPageMiss();
@@ -104,6 +104,18 @@ public:
             return taskMulti->getPageMiss();
         }
     }
+
+    size_t getMemoryAllocated() {
+        // switch case
+        if (type == 0) {
+            return taskMap->memoryAllocated();
+        } else if (type == 1) {
+            return taskSingle->memoryAllocated();
+        } else {
+            return taskMulti->memoryAllocated();
+        }
+    }
+
 };
 
 class TaskManager {
@@ -185,6 +197,8 @@ public:
             metric.push_back(task.second->getPageHits());
             metric.push_back(task.second->getPageMiss());
             metric.push_back(task.second->getExecutionTime());
+            metric.push_back(task.second->getPageTableSize());
+            metric.push_back(task.second->getMemoryAllocated());
             metrics[task.first] = metric;
         }
         return metrics;
