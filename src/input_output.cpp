@@ -137,8 +137,7 @@ int main() {
         string filename = arr[i]+ ".csv";
         
         // Write the metrics to a CSV file with the unique name
-        writeMetricsToCSV(taskManager, filename);
-        
+        writeMetricsToCSV(taskManager, filename); 
     }
 
     return 0;
