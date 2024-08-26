@@ -35,15 +35,17 @@ public:
         delete taskMulti;
     }
 
-    void requestMemory(long long logicalAddress, size_t size) {
+    bool requestMemory(long long logicalAddress, size_t size) {
         // switch case
+        bool alert = false;
         if (type == 0) {
-            taskMap->requestMemory(logicalAddress, size);
+            alert = taskMap->requestMemory(logicalAddress, size);
         } else if (type == 1) {
-            taskSingle->requestMemory(logicalAddress, size);
+            alert = taskSingle->requestMemory(logicalAddress, size);
         } else {
-            taskMulti->requestMemory(logicalAddress, size);
+            alert = taskMulti->requestMemory(logicalAddress, size);
         }
+        return alert;
     }
 
     void deallocateMemory() {
@@ -138,11 +140,12 @@ public:
         }
     }
 
-    void addTask(const string& id, long long logicalAddress, size_t size) {
+    bool addTask(const string& id, long long logicalAddress, size_t size) {
         if (tasks.find(id) == tasks.end()) {
             tasks[id] = new Task(id, &managers, type);
         }
-        tasks[id]->requestMemory(logicalAddress, size);
+        bool alert = tasks[id]->requestMemory(logicalAddress, size);
+        return alert;
     }
 
     void removeTask(const string& id) {

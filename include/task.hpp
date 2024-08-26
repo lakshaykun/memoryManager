@@ -35,10 +35,10 @@ public:
     }
 
     // Requests memory by allocating required pages and returns the number of page hits
-    void requestMemory(size_t logicalAddress, size_t size) {
-        auto start = chrono::high_resolution_clock::now();
+    bool requestMemory(size_t logicalAddress, size_t size) {
         size_t pageReq = (size_t) ceil((double) size / pageSize);  // Calculate required pages, rounding up
         for (size_t i = 0; i < pageReq; ++i) {
+            auto start = chrono::high_resolution_clock::now();
             size_t virtualPage = (logicalAddress >> p) + i;  // Calculate the virtual page number
             if (pageTable[virtualPage] != -1) {
                 ++pageHit;
@@ -53,11 +53,12 @@ public:
                 ++pagesAllocated;
             } else {
                 cerr << "No free physical pages available for task " << id << "\n";
-                break;
+                return 0;
             }
+            auto end = chrono::high_resolution_clock::now();
+            executionTime += chrono::duration<double>(end - start).count();
         }
-        auto end = chrono::high_resolution_clock::now();
-        executionTime += chrono::duration<double>(end - start).count();
+        return 1;
     }
 
     size_t getPageTableSize() const {
@@ -111,10 +112,10 @@ public:
         : id(id), manager(manager), pageTable(virtualPages, -1), pageHit(0), pageMiss(0), executionTime(0) {}
 
     // Requests memory by allocating required pages
-    void requestMemory(size_t logicalAddress, size_t size) {
-        auto start = chrono::high_resolution_clock::now();
+    bool requestMemory(size_t logicalAddress, size_t size) {
         size_t pageReq = (size_t) ceil((double) size / pageSize);
         for (size_t i = 0; i < pageReq; ++i) {
+            auto start = chrono::high_resolution_clock::now();
             size_t virtualPage = (logicalAddress >> p) + i; // Calculate the virtual page number
             if (pageTable[virtualPage] != -1) {
                 ++pageHit;
@@ -129,11 +130,12 @@ public:
                 ++pagesAllocated;
             } else {
                 cerr << "No free physical pages available for task " << id << "\n";
-                break;
+                return 0;
             }
+            auto end = chrono::high_resolution_clock::now();
+            executionTime += chrono::duration<double>(end - start).count();
         }
-        auto end = chrono::high_resolution_clock::now();
-        executionTime += chrono::duration<double>(end - start).count();
+        return 1;
     }
 
     size_t getPageTableSize() const {
@@ -187,10 +189,10 @@ public:
         : id(id), manager(manager), pageTable1(pageTableSize1, nullptr), pageHits(0), pageMiss(0), executionTime(0) {}
 
     // Requests memory by allocating required pages using a two-level page table structure
-    void requestMemory(size_t logicalAddress, size_t size) {
-        auto start = chrono::high_resolution_clock::now();
+    bool requestMemory(size_t logicalAddress, size_t size) {
         size_t pageReq = (size_t) ceil((double) size / pageSize);
         for (size_t i = 0; i < pageReq; ++i) {
+            auto start = chrono::high_resolution_clock::now();
             size_t virtualPage = (logicalAddress >> p) + i; // Calculate the virtual page number
             size_t vpn1 = (virtualPage >> pts2);
             size_t vpn2 = (virtualPage) & ((1LL << pts2) - 1);
@@ -211,11 +213,12 @@ public:
                 ++pagesAllocated;
             } else {
                 cerr << "No free physical pages available for task " << id << "\n";
-                break;
+                return 0;
             }
+            auto end = chrono::high_resolution_clock::now();
+            executionTime += chrono::duration<double>(end - start).count();
         }
-        auto end = chrono::high_resolution_clock::now();
-        executionTime += chrono::duration<double>(end - start).count();
+        return 1;
     }
 
     size_t getPageTableSize() const {

@@ -36,7 +36,10 @@ void Trace_file_task(const string& filename){
         size_dec = stoull(size.substr(0, size.find("MB"))) * 1024 * 1024;
      }
        
-        taskManager.addTask(taskid, address_hex, size_dec);
+        bool alert = taskManager.addTask(taskid, address_hex, size_dec);
+        if (alert) {
+            cerr << "Memory allocation failed for task " << taskid << "\n";
+        }
     }
 }
 
@@ -50,6 +53,5 @@ int main(){
     
     // Add a task to the TaskManager
     taskManager.displayMemoryManager();
-    taskManager.Performance();
     return 0;
 }
