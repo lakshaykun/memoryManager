@@ -142,18 +142,18 @@ int main() {
     string arr[3]={"MAP","SINGLE_LEVEL_PAGE","MULTI_LEVEL_PAGE"};
     for(int i = 0; i < 3; i++) {
         TaskManager taskManager(i);
-        Trace_file_task(file,taskManager);
+        Trace_file_task("./traces/" + file,taskManager);
 
         // Display the memory manager status
-        taskManager.displayMemoryManager();
+        cout << "file run successfull" << endl;
         
         // Generate a unique file name for each iteration
         string filename = "./output/" + arr[i]+ ".csv";
         
         // Write the metrics to a CSV file with the unique name
         writeMetricsToCSV(taskManager, filename); 
+        cout << "Metrics written to " << filename << endl;
     }
 
     return 0;
 }
-
