@@ -50,6 +50,8 @@ int main(){
     
     // Add a task to the TaskManager
     taskManager.displayMemoryManager();
-    taskManager.Performance();
+    //csv file
+    taskManager.writeMetricsToCSV("tasks_metrics.csv");
+    
     return 0;
 }

@@ -204,6 +204,37 @@ public:
         return metrics;
     }
 
+         void writeMetricsToCSV(const std::string& filename) const {
+        std::ofstream csvFile(filename);
+
+        // Write CSV header
+        csvFile << "Task ID,Page Hits,Page Misses,Execution Time\n";
+
+        // Fetch the metrics (already sorted by task ID)
+        std::map<std::string, std::vector<double>> metrics = tasksMetrics();
+
+        // Write each task's metrics to the CSV file
+        for (const auto& entry : metrics) {
+            csvFile << entry.first << ","; // Task ID
+
+            // Write metrics, comma-separated
+            for (size_t i = 0; i < entry.second.size(); ++i) {
+                csvFile << entry.second[i];
+                if (i < entry.second.size() - 1) {
+                    csvFile << ",";
+                }
+            }
+            csvFile << "\n";
+        }
+
+        csvFile.close();
+        if (csvFile.fail()) {
+            std::cerr << "Failed to write to file: " << filename << "\n";
+        }
+    }
 };
+
+
+
 
 #endif // TASK_MANAGER
