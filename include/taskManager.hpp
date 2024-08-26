@@ -59,16 +59,27 @@ public:
         }
     }
 
-    size_t getPageTableSize() const {
-        // switch case
-        if (type == 0) {
-            return taskMap->getPageTableSize();
-        } else if (type == 1) {
-            return taskSingle->getPageTableSize();
-        } else {
-            return taskMulti->getPageTableSize();
-        }
+    double getPageTableSize() const {
+    double pageTableSizeInKB;
+
+    switch (type) {
+        case 0:
+            pageTableSizeInKB = static_cast<double>(taskMap->getPageTableSize()) / 1024.0;
+            break;
+        case 1:
+            pageTableSizeInKB = static_cast<double>(taskSingle->getPageTableSize()) / 1024.0;
+            break;
+        case 2:
+            pageTableSizeInKB = static_cast<double>(taskMulti->getPageTableSize()) / 1024.0;
+            break;
+        default:
+            pageTableSizeInKB = 0; // or handle as an error if an invalid type
+            break;
     }
+
+    return pageTableSizeInKB;
+}
+
 
     size_t getPageHits() {
         // switch case
@@ -107,26 +118,15 @@ public:
         }
     }
 
-    size_t getMemoryAllocated() {
-        // switch case
-        if (type == 0) {
-            return taskMap->memoryAllocated();
-        } else if (type == 1) {
-            return taskSingle->memoryAllocated();
-        } else {
-            return taskMulti->memoryAllocated();
-        }
-    }
-
-    size_t getInvalidVirtualPages() {
-        // switch case
-        if (type == 0) {
-            return taskMap->getInvalidVirtualPages();
-        } else if (type == 1) {
-            return taskSingle->getInvalidVirtualPages();
-        } else {
-            return taskMulti->getInvalidVirtualPages();
-        }
+   double getMemoryAllocated() const {
+    double memoryInKB;
+    
+    if (type == 0) {
+        memoryInKB = static_cast<double>(taskMap->memoryAllocated()) / 1024.0;
+    } else if (type == 1) {
+        memoryInKB = static_cast<double>(taskSingle->memoryAllocated()) / 1024.0;
+    } else {
+        memoryInKB = static_cast<double>(taskMulti->memoryAllocated()) / 1024.0;
     }
 
 };
