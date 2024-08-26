@@ -5,9 +5,9 @@
 #include <bits/stdc++.h>
 #include <cmath>
 
-size_t n = 32;
-size_t m = 32;
-size_t p = 12;
+size_t n = 34;
+size_t m = 34;
+size_t p = 14;
 
 //
 size_t pageSize = (1LL<<p);

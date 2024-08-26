@@ -142,7 +142,7 @@ int main() {
     string arr[3]={"MAP","SINGLE_LEVEL_PAGE","MULTI_LEVEL_PAGE"};
     for(int i = 0; i < 3; i++) {
         TaskManager taskManager(i);
-        Trace_file_task("./traces/" + file,taskManager);
+        Trace_file_task("./traces/" + file + ".txt",taskManager);
 
         // Display the memory manager status
         cout << "file run successfull" << endl;

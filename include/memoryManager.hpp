@@ -89,7 +89,7 @@ public:
     }
 
     vector<size_t> getMemoryStatus() const {
-        return {physical_memory, virtual_memory, page_size, physical_pages, virtual_pages, virtual_pages_available, physical_pages_available, physical_pages_allocated};
+        return {physical_memory, virtual_memory, page_size, physical_pages, virtual_pages, virtual_pages_available, physical_pages_available, physical_pages_allocated, physicalMemorySize};
     }
 
 };
