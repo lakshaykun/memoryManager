@@ -7,7 +7,7 @@ Develop a memory management system in C/C++ that fulfills the following specific
 
 - **Memory Manager**: Manages physical pages, allocating pages upon request.
 - **Task**: Each instance has its own page table and requests memory from the memory manager based on a trace file.
-- **Performance Module**: Computes memory usage, including page tables, allocated memory, and available memory, and reports execution times and performance metrics.
+- **Performance Module**: Computes memory usage, including page tables, allocated memory, and available memory, and reports invalid page number,execution times and performance metrics.
 - **Input/Output Module**: Reads a trace file, invoking tasks based on the file contents.
 
 ## Specifications
