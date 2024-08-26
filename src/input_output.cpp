@@ -5,7 +5,7 @@
 #include "../include/config.hpp"
 
 using namespace std;
-TaskManager taskManager(1);
+TaskManager taskManager(2);
 void Trace_file_task(const string& filename){
     ifstream file(filename);
     if(!file.is_open()){

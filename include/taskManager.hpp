@@ -11,8 +11,6 @@
 
 using namespace std;
 
-typedef vector<MemoryManager> Managers;
-
 class Task {
 private:
     string id;
@@ -22,12 +20,17 @@ private:
     TaskMulti* taskMulti;
 
 public:
-    Task(const string& id, Managers* const &managers, const int& type)
-        : id(id),
-            type(type), 
-          taskMap(new TaskMap(id, &managers->at(0))),
-          taskSingle(new TaskSingle(id, &managers->at(1))),
-          taskMulti(new TaskMulti(id, &managers->at(2))) {}
+    Task(const string& id, MemoryManager* const &manager, const int& type)
+        :   id(id),
+            type(type) {
+        if (type == 0) {
+            taskMap = new TaskMap(id, manager);
+        } else if (type == 1) {
+            taskSingle = new TaskSingle(id, manager);
+        } else {
+            taskMulti = new TaskMulti(id, manager);
+        }
+    }
 
     ~Task() {
         delete taskMap;
@@ -147,7 +150,7 @@ public:
 class TaskManager {
 private:
     map<string, Task*> tasks;
-    Managers managers;
+    MemoryManager manager;
     int type;
     double pageHits = 0;
     double pageMiss = 0;
@@ -155,7 +158,7 @@ private:
 
 public:
     TaskManager(const int& type) 
-        : managers(3, MemoryManager(physicalMemorySize, virtualMemorySize, pageSize)),
+        : manager(MemoryManager(physicalMemorySize, virtualMemorySize, pageSize)),
           type(type){}
 
     ~TaskManager() {
@@ -166,7 +169,7 @@ public:
 
     bool addTask(const string& id, long long logicalAddress, size_t size) {
         if (tasks.find(id) == tasks.end()) {
-            tasks[id] = new Task(id, &managers, type);
+            tasks[id] = new Task(id, &manager, type);
         }
         return tasks[id]->requestMemory(logicalAddress, size);
     }
@@ -204,9 +207,7 @@ public:
     }
 
     void displayMemoryManager() const {
-        for (const auto& manager : managers) {
-            manager.displayMemory();
-        }
+        manager.displayMemory();
     }
 
     vector<double> metrics() {
