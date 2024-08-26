@@ -155,8 +155,10 @@ private:
     double pageHits = 0;
     double pageMiss = 0;
     double executionTime = 0;
+    
 
 public:
+
     TaskManager(const int& type) 
         : manager(MemoryManager(physicalMemorySize, virtualMemorySize, pageSize)),
           type(type){}

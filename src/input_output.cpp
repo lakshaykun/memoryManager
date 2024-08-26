@@ -1,48 +1,20 @@
-#include<bits/stdc++.h>
-
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <vector>
+#include <map>
+#include <string>
+#include <algorithm>
 #include "../include/taskManager.hpp"
 #include "../include/task.hpp"
 #include "../include/config.hpp"
 
 using namespace std;
-TaskManager taskManager(2);
-void Trace_file_task(const string& filename){
-    ifstream file(filename);
-    if(!file.is_open()){
-        cout<<"Error While Loading File"<<endl;
-        return;
-    }
-    string line;
-    while(getline(file,line)){
-        if(line.empty()|| line.find(':')==string::npos){
-            continue;
-        }
-        string taskid;
-        string address;
-        string size;
 
-        istringstream iss(line);
-        getline(iss,taskid,':');
-        getline(iss,address,':');
-        getline(iss,size);
-       
-        address=address.substr(2);
-        size_t address_hex=stoull(address,nullptr,16);
-        size_t size_dec;
-        if (size.find("KB") != string::npos) {
-        size_dec = stoull(size.substr(0, size.find("KB"))) * 1024;
-        }
-     else if (size.find("MB") != string::npos) {
-        size_dec = stoull(size.substr(0, size.find("MB"))) * 1024 * 1024;
-     }
-       
-        bool alert = taskManager.addTask(taskid, address_hex, size_dec);
-        if (!alert) {
-            cerr << "Memory allocation failed for task " << taskid << "\n";
-            break;
-        }
-    }
-}
+// Initialize the TaskManager object
+TaskManager taskManager(0);
+
+// Helper function to extract numeric part of a string (e.g., "t10" -> 10)
 int extractNumericPart(const std::string& s) {
     std::stringstream ss(s.substr(1)); // Remove the leading character and convert the rest to an integer
     int num = 0;
@@ -54,27 +26,72 @@ int extractNumericPart(const std::string& s) {
 bool compareTaskIDs(const std::string& id1, const std::string& id2) {
     return extractNumericPart(id1) < extractNumericPart(id2);
 }
-void writeMetricsToCSV(const TaskManager& taskManager, const std::string& filename) {
-    std::ofstream csvFile(filename);
+
+// Function to process the trace file and add tasks
+void Trace_file_task(const string& filename) {
+    ifstream file(filename);
+    if (!file.is_open()) {
+        cerr << "Error While Loading File: " << filename << endl;
+        return;
+    }
+    
+    string line;
+    while (getline(file, line)) {
+        if (line.empty() || line.find(':') == string::npos) {
+            continue;
+        }
+        
+        string taskid, address, size;
+        istringstream iss(line);
+        getline(iss, taskid, ':');
+        getline(iss, address, ':');
+        getline(iss, size);
+
+        address = address.substr(2); // Remove leading '0x' from hexadecimal address
+        size_t address_hex = stoull(address, nullptr, 16);
+        size_t size_dec;
+        if (size.find("KB") != string::npos) {
+            size_dec = stoull(size.substr(0, size.find("KB"))) * 1024;
+        } else if (size.find("MB") != string::npos) {
+            size_dec = stoull(size.substr(0, size.find("MB"))) * 1024 * 1024;
+        } else {
+            cerr << "Unknown size unit for task " << taskid << "\n";
+            continue;
+        }
+
+        bool alert = taskManager.addTask(taskid, address_hex, size_dec);
+        if (!alert) {
+            cerr << "Memory allocation failed for task " << taskid << "\n";
+        }
+    }
+}
+
+// Function to write metrics to a CSV file
+void writeMetricsToCSV( TaskManager& taskManager, const string& filename) {
+    ofstream csvFile(filename);
+    if (!csvFile.is_open()) {
+        cerr << "Failed to open file: " << filename << endl;
+        return;
+    }
 
     // Write CSV header
-    csvFile << "Task ID,Page Hits,Page Misses,Execution Time,Page Table Size,Memory Allocated,Invalid Vpn\n";
+    csvFile << "Task ID,Page Hits,Page Misses,Execution Time,Page Table Size,Physical Memory Used,Invalid Pages\n";
 
-    // Fetch the metrics (already sorted by task ID)
-    std::map<std::string, std::vector<double>> metrics = taskManager.tasksMetrics();
+    // Fetch the metrics
+    map<string, vector<double>> metrics1 = taskManager.tasksMetrics();
 
     // Collect task IDs for custom sorting
-    std::vector<std::string> taskIDs;
-    for (const auto& entry : metrics) {
+    vector<string> taskIDs;
+    for (const auto& entry : metrics1) {
         taskIDs.push_back(entry.first);
     }
 
     // Sort task IDs using the custom comparator
-    std::sort(taskIDs.begin(), taskIDs.end(), compareTaskIDs);
+    sort(taskIDs.begin(), taskIDs.end(), compareTaskIDs);
 
     // Write each task's metrics to the CSV file
     for (const auto& taskID : taskIDs) {
-        const auto& entry = metrics[taskID];
+        const auto& entry = metrics1[taskID];
         csvFile << taskID << ","; // Task ID
 
         // Write metrics, comma-separated
@@ -87,23 +104,36 @@ void writeMetricsToCSV(const TaskManager& taskManager, const std::string& filena
         csvFile << "\n";
     }
 
+    // Add summary section
+    csvFile << "\nSummary\n\n";
+    csvFile << "Metric,Value\n";
+
+    // Retrieve summary metrics from TaskManager
+    auto summaryMetrics = taskManager.metrics();
+    
+    // Write summary values to the CSV file
+    csvFile << "Total Page Hits," << summaryMetrics[0] << "\n";
+    csvFile << "Total Page Misses," << summaryMetrics[1] << "\n";
+    csvFile << "Total Execution Time," << summaryMetrics[2] << "\n";
+    
+
     csvFile.close();
     if (csvFile.fail()) {
-        std::cerr << "Failed to write to file: " << filename << "\n";
+        cerr << "Failed to write to file: " << filename << "\n";
     }
 }
-int main(){
+
+int main() {
     string file;
-    cout<<"ENTER FILE PATH"<<endl;
-    cin>>file;
+    cout << "ENTER FILE PATH" << endl;
+    cin >> file;
     Trace_file_task(file);
-    
-    // Create a TaskManager object
-    
-    // Add a task to the TaskManager
+
+    // Display the memory manager status
     taskManager.displayMemoryManager();
-    //csv file
-    writeMetricsToCSV(taskManager,"tasks_metrics.csv");
+    
+    // Write the metrics to a CSV file
+    writeMetricsToCSV(taskManager, "tasks_map.csv");
 
     return 0;
 }
