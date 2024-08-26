@@ -120,12 +120,12 @@ void writeMetricsToCSV( TaskManager& taskManager, const string& filename) {
     double virtualMemoryGB = static_cast<double>(memoryMetrics[1]) / (1024 * 1024 * 1024);
     double physicallMemoryGBT = static_cast<double>(memoryMetrics[8]) / (1024 * 1024 * 1024);
     csvFile << "Total Physical Memory (GB)," << physicallMemoryGBT << "\n";
-    csvFile << "Virtual Memory (GB)," << virtualMemoryGB << "\n";
+    csvFile << "Total Virtual Memory (GB)," << virtualMemoryGB << "\n";
      csvFile << "Available Physical Memory (GB)," << physicalMemoryGB << "\n";
     csvFile << "Page Size," << memoryMetrics[2] << " bytes\n";
     csvFile << "Total Physical Pages," << memoryMetrics[3] << "\n";
     csvFile << "Total Virtual Pages," << memoryMetrics[4] << "\n";
-    csvFile << "Virtual Pages Available," << memoryMetrics[5] << "\n";
+
     csvFile << "Physical Pages Available," << memoryMetrics[6] << "\n";
     csvFile << "Physical Pages Allocated," << memoryMetrics[7] << "\n";
 
