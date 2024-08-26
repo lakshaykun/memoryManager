@@ -33,6 +33,9 @@ public:
         for (size_t i = 0; i < virtualPages; ++i) {
             pageTable[i] = -1;
         }
+        for (int i=0; i<ceil(getPageTableSize()/pageSize); i++){
+            manager->allocatePage();
+        }
     }
 
     // Requests memory by allocating required pages and returns the number of page hits
@@ -122,7 +125,12 @@ private:
 public:
     // Constructor initializes task ID, memory manager pointer, and page table size
     TaskSingle(const string& id, MemoryManager* const &manager)
-        : id(id), manager(manager), pageTable(virtualPages, -1), pageHit(0), pageMiss(0), executionTime(0) {}
+        : id(id), manager(manager), pageTable(virtualPages, -1), pageHit(0), pageMiss(0), executionTime(0)
+        {
+            for (int i=0; i<ceil(getPageTableSize()/pageSize); i++){
+                manager->allocatePage();
+            }
+        }
 
     // Requests memory by allocating required pages
     bool requestMemory(size_t logicalAddress, size_t size) {
@@ -211,7 +219,11 @@ private:
 public:
     // Constructor initializes task ID, memory manager pointer, and the first-level page table size
     TaskMulti(const string& id, MemoryManager* const &manager)
-        : id(id), manager(manager), pageTable1(pageTableSize1, nullptr), pageHits(0), pageMiss(0), executionTime(0) {}
+        : id(id), manager(manager), pageTable1(pageTableSize1, nullptr), pageHits(0), pageMiss(0), executionTime(0) {
+            for (int i=0; i< ceil((double) getPageTableSize() / pageSize); i++){
+                manager->allocatePage();
+            }
+        }
 
     // Requests memory by allocating required pages using a two-level page table structure
     bool requestMemory(size_t logicalAddress, size_t size) {
