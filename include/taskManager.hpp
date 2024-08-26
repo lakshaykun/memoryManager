@@ -32,10 +32,15 @@ public:
         }
     }
 
+    // delete task and deallocate all memory associated with it
     ~Task() {
-        delete taskMap;
-        delete taskSingle;
-        delete taskMulti;
+        if (type == 0) {
+            delete taskMap;
+        } else if (type == 1) {
+            delete taskSingle;
+        } else {
+            delete taskMulti;
+        }
     }
 
     bool requestMemory(long long logicalAddress, size_t size) {
@@ -51,33 +56,22 @@ public:
         return alert;
     }
 
-    void deallocateMemory() {
-        // switch case
-        if (type == 0) {
-            taskMap->deallocateMemory();
-        } else if (type == 1) {
-            taskSingle->deallocateMemory();
-        } else {
-            taskMulti->deallocateMemory();
-        }
-    }
-
     double getPageTableSize() const {
-    double pageTableSizeInKB;
+        double pageTableSizeInKB;
 
-    switch (type) {
-        case 0:
-            pageTableSizeInKB = static_cast<double>(taskMap->getPageTableSize()) / 1024.0;
-            break;
-        case 1:
-            pageTableSizeInKB = static_cast<double>(taskSingle->getPageTableSize()) / 1024.0;
-            break;
-        case 2:
-            pageTableSizeInKB = static_cast<double>(taskMulti->getPageTableSize()) / 1024.0;
-            break;
-        default:
-            pageTableSizeInKB = 0; // or handle as an error if an invalid type
-            break;
+        switch (type) {
+            case 0:
+                pageTableSizeInKB = static_cast<double>(taskMap->getPageTableSize()) / 1024.0;
+                break;
+            case 1:
+                pageTableSizeInKB = static_cast<double>(taskSingle->getPageTableSize()) / 1024.0;
+                break;
+            case 2:
+                pageTableSizeInKB = static_cast<double>(taskMulti->getPageTableSize()) / 1024.0;
+                break;
+            default:
+                pageTableSizeInKB = 0; // or handle as an error if an invalid type
+                break;
     }
 
     return pageTableSizeInKB;
@@ -163,6 +157,7 @@ public:
         : manager(MemoryManager(physicalMemorySize, virtualMemorySize, pageSize)),
           type(type){}
 
+    // Destructor
     ~TaskManager() {
         for (auto& task : tasks) {
             delete task.second;
@@ -174,17 +169,6 @@ public:
             tasks[id] = new Task(id, &manager, type);
         }
         return tasks[id]->requestMemory(logicalAddress, size);
-    }
-
-    void removeTask(const string& id) {
-        auto it = tasks.find(id);
-        if (it == tasks.end()) {
-            cerr << "Task not found\n";
-            return;
-        }
-        it->second->deallocateMemory();
-        delete it->second;
-        tasks.erase(it);
     }
 
     void calculatePageHits() {

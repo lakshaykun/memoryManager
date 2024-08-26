@@ -38,6 +38,15 @@ public:
         }
     }
 
+    ~TaskMap() {
+        for (const auto& entry : pageTable) {
+            if (entry.second != -1) {
+                manager->deallocatePage(entry.second);
+            }
+        }
+        pageTable.clear();
+    }
+
     // Requests memory by allocating required pages and returns the number of page hits
     bool requestMemory(size_t logicalAddress, size_t size) {
         size_t pageReq = (size_t) ceil((double) size / pageSize);  // Calculate required pages, rounding up
@@ -77,15 +86,6 @@ public:
 
     const string& getTaskId() const {
         return id;
-    }
-
-    void deallocateMemory() {
-        for (const auto& entry : pageTable) {
-            if (entry.second != -1) {
-                manager->deallocatePage(entry.second);
-            }
-        }
-        pageTable.clear();
     }
 
     size_t getPageHit() const {
@@ -132,6 +132,16 @@ public:
             }
         }
 
+    // destructor
+    ~TaskSingle() {
+        for (size_t entry : pageTable) {
+            if (entry != -1) {
+                manager->deallocatePage(entry);
+            }
+        }
+        pageTable.clear();
+    }
+
     // Requests memory by allocating required pages
     bool requestMemory(size_t logicalAddress, size_t size) {
         size_t pageReq = (size_t) ceil((double) size / pageSize);
@@ -171,15 +181,6 @@ public:
 
     const string& getTaskId() const {
         return id;
-    }
-
-    void deallocateMemory() {
-        for (size_t entry : pageTable) {
-            if (entry != -1) {
-                manager->deallocatePage(entry);
-            }
-        }
-        pageTable.clear();
     }
 
     size_t getPageHit() const {
@@ -224,6 +225,16 @@ public:
                 manager->allocatePage();
             }
         }
+
+    // Destructor
+    ~TaskMulti() {
+        for (auto& entry : pageTable1) {
+            if (entry != nullptr) {
+                delete entry;
+            }
+        }
+        pageTable1.clear();
+    }
 
     // Requests memory by allocating required pages using a two-level page table structure
     bool requestMemory(size_t logicalAddress, size_t size) {
@@ -276,20 +287,6 @@ public:
 
     const string& getTaskId() const {
         return id;
-    }
-
-    void deallocateMemory() {
-        for (auto& entry : pageTable1) {
-            if (entry != nullptr) {
-                for (size_t page : *entry) {
-                    if (page != -1) {
-                        manager->deallocatePage(page);
-                    }
-                }
-                delete entry;
-            }
-        }
-        pageTable1.clear();
     }
 
     size_t getPageHit() const {

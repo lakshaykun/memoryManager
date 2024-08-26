@@ -31,6 +31,11 @@ public:
           arr(phy / page, false) // Initialize vector arr with physical_pages elements set to false
     {}
 
+    // destructor
+    ~MemoryManager() {
+        arr.clear();
+    }
+
     // Function to allocate a page
     int allocatePage() {
         if (physical_pages_available > 0) {

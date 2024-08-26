@@ -141,6 +141,7 @@ int main() {
         
         // Write the metrics to a CSV file with the unique name
         writeMetricsToCSV(taskManager, filename);
+        
     }
 
     return 0;
