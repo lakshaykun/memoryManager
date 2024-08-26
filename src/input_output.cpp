@@ -25,11 +25,11 @@ bool compareTaskIDs(const std::string& id1, const std::string& id2) {
 }
 
 // Function to process the trace file and add tasks
-void Trace_file_task(const string& filename,TaskManager &taskManager) {
+bool Trace_file_task(const string& filename,TaskManager &taskManager) {
     ifstream file(filename);
     if (!file.is_open()) {
         cerr << "Error While Loading File: " << filename << endl;
-        return;
+        return 0;
     }
     
     string line;
@@ -58,10 +58,10 @@ void Trace_file_task(const string& filename,TaskManager &taskManager) {
 
         bool alert = taskManager.addTask(taskid, address_hex, size_dec);
         if (!alert) {
-            cerr << "Memory allocation failed for task " << taskid << "\n";
-            break;
+            return 0;
         }
     }
+    return 1;
 }
 
 // Function to write metrics to a CSV file
@@ -144,10 +144,14 @@ int main() {
     string arr[3]={"MAP","SINGLE_LEVEL_PAGE","MULTI_LEVEL_PAGE"};
     for(int i = 0; i < 3; i++) {
         TaskManager taskManager(i);
-        Trace_file_task("./traces/" + file + ".txt",taskManager);
+        bool alert = Trace_file_task("./traces/" + file + ".txt",taskManager);
 
         // Display the memory manager status
-        cout << "file run successfull" << endl;
+        if (alert){
+            cout << "file run successfull" << endl;
+        } else {
+            cout << "file run failed" << endl;
+        }
         
         // Generate a unique file name for each iteration
         string filename = "./output/" + arr[i]+ ".csv";
