@@ -11,7 +11,6 @@
 
 using namespace std;
 
-<<<<<<< HEAD
         istringstream iss(line);
         getline(iss,taskid,':');
         getline(iss,address,':');
@@ -34,12 +33,6 @@ using namespace std;
         }
     }
 }
-=======
-// Initialize the TaskManager object
-TaskManager taskManager(1);
-
-// Helper function to extract numeric part of a string (e.g., "t10" -> 10)
->>>>>>> 33280ee (last)
 int extractNumericPart(const std::string& s) {
     std::stringstream ss(s.substr(1)); // Remove the leading character and convert the rest to an integer
     int num = 0;
