@@ -19,5 +19,5 @@ trace: ./bin/test.out
 	
 clean:
 	rm -f ./bin/*.out
-	rm -f ./traces/*.txt
+	rm -f ./traces/trace.txt
 	rm -f ./output/*.csv
