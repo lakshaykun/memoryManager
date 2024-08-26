@@ -1,6 +1,6 @@
 CXX = g++
 
-all: app
+all: app test
 
 app: ./src/input_output.cpp
 	$(CXX) ./src/input_output.cpp -o ./bin/app.out
@@ -18,3 +18,4 @@ trace: ./bin/test.out
 clean:
 	rm -f ./bin/*.out
 	rm -f ./traces/*.txt
+	rm -f ./output/*.csv

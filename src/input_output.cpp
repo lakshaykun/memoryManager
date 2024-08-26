@@ -148,7 +148,7 @@ int main() {
         taskManager.displayMemoryManager();
         
         // Generate a unique file name for each iteration
-        string filename = arr[i]+ ".csv";
+        string filename = "./output/" + arr[i]+ ".csv";
         
         // Write the metrics to a CSV file with the unique name
         writeMetricsToCSV(taskManager, filename); 

@@ -44,7 +44,7 @@ int main() {
     cin>>size;
 
     // Open a file to write the generated traces
-    std::ofstream traceFile("../traces/trace.txt");
+    std::ofstream traceFile("./traces/trace.txt");
     if (!traceFile) {
         std::cerr << "Error opening file for writing traces!" << std::endl;
         return 1;
@@ -104,6 +104,5 @@ int main() {
 
     traceFile.close();
     std::cout << "Memory access traces generated and written to memory_traces.txt" << std::endl;
-
     return 0;
 }
