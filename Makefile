@@ -1,10 +1,20 @@
-all: test
+CXX = g++
 
-test: ./src/input_output.cpp
-	g++ -o test ./src/input_output.cpp
+all: app
 
-run: test
-	./test
+app: ./src/input_output.cpp
+	$(CXX) ./src/input_output.cpp -o ./bin/app.out
+
+run: 
+	./bin/app.out
+
+test: ./test/test.cpp
+	$(CXX) ./test/test.cpp -o ./bin/test.out
+
+trace: ./bin/test.out
+	./bin/test.out
+	
 
 clean:
-	rm -f test
+	rm -f ./bin/*.out
+	rm -f ./traces/*.txt
