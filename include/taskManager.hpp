@@ -129,6 +129,19 @@ public:
         memoryInKB = static_cast<double>(taskMulti->memoryAllocated()) / 1024.0;
     }
 
+    return memoryInKB;
+}
+    
+        size_t getInvalidVirtualPages() {
+            // switch case
+            if (type == 0) {
+                return taskMap->getInvalidVirtualPages();
+            } else if (type == 1) {
+                return taskSingle->getInvalidVirtualPages();
+            } else {
+                return taskMulti->getInvalidVirtualPages();
+            }
+        }
 };
 
 class TaskManager {
