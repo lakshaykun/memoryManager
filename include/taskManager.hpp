@@ -144,16 +144,6 @@ public:
         tasks.erase(it);
     }
 
-    void displayTasks() const {
-        for (const auto& task : tasks) {
-            cout << "Task ID: " << task.first << endl;
-            cout << "Page Table Size: " << task.second->getPageTableSize() << endl;
-            cout << "Page Hits: " << task.second->getPageHits() << endl;
-            cout << "Page Miss: " << task.second->getPageMiss() << endl;
-            cout << "Execution Time: " << task.second->getExecutionTime() << endl;
-        }
-    }
-
     void calculatePageHits() {
         pageHits = 0;
         for (const auto& task : tasks) {
@@ -187,6 +177,19 @@ public:
         calculatePageMiss();
         return {pageHits, pageMiss, executionTime};
     }
+
+    map<string, vector<double>> tasksMetrics() const {
+        map<string, vector<double>> metrics;
+        for (const auto& task : tasks) {
+            vector<double> metric;
+            metric.push_back(task.second->getPageHits());
+            metric.push_back(task.second->getPageMiss());
+            metric.push_back(task.second->getExecutionTime());
+            metrics[task.first] = metric;
+        }
+        return metrics;
+    }
+
 };
 
 #endif // TASK_MANAGER
