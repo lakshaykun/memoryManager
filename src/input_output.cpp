@@ -14,6 +14,7 @@ using namespace std;
 // Initialize the TaskManager object
 TaskManager taskManager(2);
 
+
 // Helper function to extract numeric part of a string (e.g., "t10" -> 10)
 int extractNumericPart(const std::string& s) {
     std::stringstream ss(s.substr(1)); // Remove the leading character and convert the rest to an integer
@@ -28,7 +29,7 @@ bool compareTaskIDs(const std::string& id1, const std::string& id2) {
 }
 
 // Function to process the trace file and add tasks
-void Trace_file_task(const string& filename) {
+void Trace_file_task(const string& filename,TaskManager &taskManager) {
     ifstream file(filename);
     if (!file.is_open()) {
         cerr << "Error While Loading File: " << filename << endl;
@@ -127,13 +128,21 @@ int main() {
     string file;
     cout << "ENTER FILE PATH" << endl;
     cin >> file;
-    Trace_file_task(file);
+    string arr[3]={"MAP","SINGLE_LEVEL_PAGE","MULTI_LEVEL_PAGE"};
+    for(int i = 0; i < 3; i++) {
+        TaskManager taskManager(i);
+        Trace_file_task(file,taskManager);
 
-    // Display the memory manager status
-    taskManager.displayMemoryManager();
-    
-    // Write the metrics to a CSV file
-    writeMetricsToCSV(taskManager, "tasks_map.csv");
+        // Display the memory manager status
+        taskManager.displayMemoryManager();
+        
+        // Generate a unique file name for each iteration
+        string filename = arr[i]+ ".csv";
+        
+        // Write the metrics to a CSV file with the unique name
+        writeMetricsToCSV(taskManager, filename);
+    }
 
     return 0;
 }
+
