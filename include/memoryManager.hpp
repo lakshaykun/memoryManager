@@ -3,6 +3,8 @@
 
 #include <iostream>
 #include <vector>
+#include <iomanip>  // For std::fixed and std::setprecision
+using namespace std;
 
 class MemoryManager {
 private:
@@ -73,21 +75,18 @@ public:
         }
     }
 
-    // Function to display memory status
-    #include <iostream>
-#include <iomanip>  // For std::fixed and std::setprecision
 
-void displayMemory() const {
-    // Convert bytes to gigabytes
-    double physicalMemoryGB = static_cast<double>(physical_memory) / (1024 * 1024 * 1024);
-    double virtualMemoryGB = static_cast<double>(virtual_memory) / (1024 * 1024 * 1024);
+    void displayMemory() const {
+        // Convert bytes to gigabytes
+        double physicalMemoryGB = static_cast<double>(physical_memory) / (1024 * 1024 * 1024);
+        double virtualMemoryGB = static_cast<double>(virtual_memory) / (1024 * 1024 * 1024);
 
-    // Print the results with 2 decimal places
-    std::cout << "PHYSICAL MEMORY AVAILABLE: " << std::fixed << std::setprecision(17) << physicalMemoryGB << " GB" << std::endl;
-    
-    std::cout << "PHYSICAL PAGES ALLOCATED : " << physical_pages_allocated << std::endl;
-    std::cout << "PHYSICAL PAGES AVAILABLE : " << physical_pages_available << std::endl;
-}
+        // Print the results with 2 decimal places
+        std::cout << "PHYSICAL MEMORY AVAILABLE: " << std::fixed << std::setprecision(17) << physicalMemoryGB << " GB" << std::endl;
+        
+        std::cout << "PHYSICAL PAGES ALLOCATED : " << physical_pages_allocated << std::endl;
+        std::cout << "PHYSICAL PAGES AVAILABLE : " << physical_pages_available << std::endl;
+    }
 
     vector<size_t> getMemoryStatus() const {
         return {physical_memory, virtual_memory, page_size, physical_pages, virtual_pages, virtual_pages_available, physical_pages_available, physical_pages_allocated};
