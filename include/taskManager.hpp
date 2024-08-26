@@ -218,6 +218,10 @@ public:
         return metrics;
     }
 
+    vector<size_t> memoryManagerMetrics() const {
+        return manager.getMemoryStatus();
+    } 
+
         
 };
 

@@ -11,6 +11,7 @@ private:
     size_t page_size;
     size_t physical_pages_available;
     size_t virtual_pages;
+    size_t virtual_pages_available;
     size_t physical_pages_allocated;
     size_t physical_pages;
     size_t current_phy_page;
@@ -28,6 +29,7 @@ public:
           virtual_pages(vir / page),
           physical_pages_allocated(0),
           current_phy_page(0),
+          virtual_pages_available(virtual_memory / page_size),
           arr(phy / page, false) // Initialize vector arr with physical_pages elements set to false
     {}
 
@@ -45,6 +47,7 @@ public:
 
             if (current_phy_page < physical_pages) {
                 arr[current_phy_page] = true;
+                virtual_pages_available--;
                 return current_phy_page++;
             } else {
                 for (size_t i = 0; i < physical_pages; ++i) {
@@ -85,6 +88,10 @@ void displayMemory() const {
     std::cout << "PHYSICAL PAGES ALLOCATED : " << physical_pages_allocated << std::endl;
     std::cout << "PHYSICAL PAGES AVAILABLE : " << physical_pages_available << std::endl;
 }
+
+    vector<size_t> getMemoryStatus() const {
+        return {physical_memory, virtual_memory, page_size, physical_pages, virtual_pages, virtual_pages_available, physical_pages_available, physical_pages_allocated};
+    }
 
 };
 

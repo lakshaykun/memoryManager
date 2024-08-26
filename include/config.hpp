@@ -5,8 +5,8 @@
 #include <bits/stdc++.h>
 #include <cmath>
 
-size_t n = 33;
-size_t m = 34;
+size_t n = 32;
+size_t m = 32;
 size_t p = 12;
 
 //
@@ -21,10 +21,10 @@ size_t physicalPages = physicalMemorySize/pageSize;
 
 
 // multi level page table
-size_t pts1 = (int) floor((n-p)/2);
-size_t pts2 = (int) ceil((n-p)/2);
-size_t pageTableSize2 = 1 << (int) ceil((n-p)/2);
-size_t pageTableSize1 = 1 << (int) floor((n-p)/2);
+size_t pts1 = (size_t) floor((n-p)/2);
+size_t pts2 = (size_t) ceil((n-p)/2);
+size_t pageTableSize1 = 1 << (size_t) floor((n-p)/2);
+size_t pageTableSize2 = 1 << (size_t) ceil((n-p)/2);
 size_t pteSize1 = n;
 size_t pteSize2 = m;
 

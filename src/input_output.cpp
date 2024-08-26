@@ -11,10 +11,6 @@
 
 using namespace std;
 
-// Initialize the TaskManager object
-TaskManager taskManager(2);
-
-
 // Helper function to extract numeric part of a string (e.g., "t10" -> 10)
 int extractNumericPart(const std::string& s) {
     std::stringstream ss(s.substr(1)); // Remove the leading character and convert the rest to an integer
@@ -63,6 +59,7 @@ void Trace_file_task(const string& filename,TaskManager &taskManager) {
         bool alert = taskManager.addTask(taskid, address_hex, size_dec);
         if (!alert) {
             cerr << "Memory allocation failed for task " << taskid << "\n";
+            break;
         }
     }
 }
