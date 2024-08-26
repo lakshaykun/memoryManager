@@ -118,6 +118,17 @@ public:
         }
     }
 
+    size_t getInvalidVirtualPages() {
+        // switch case
+        if (type == 0) {
+            return taskMap->getInvalidVirtualPages();
+        } else if (type == 1) {
+            return taskSingle->getInvalidVirtualPages();
+        } else {
+            return taskMulti->getInvalidVirtualPages();
+        }
+    }
+
 };
 
 class TaskManager {
@@ -144,8 +155,7 @@ public:
         if (tasks.find(id) == tasks.end()) {
             tasks[id] = new Task(id, &managers, type);
         }
-        bool alert = tasks[id]->requestMemory(logicalAddress, size);
-        return alert;
+        return tasks[id]->requestMemory(logicalAddress, size);
     }
 
     void removeTask(const string& id) {
@@ -202,6 +212,7 @@ public:
             metric.push_back(task.second->getExecutionTime());
             metric.push_back(task.second->getPageTableSize());
             metric.push_back(task.second->getMemoryAllocated());
+            metric.push_back(task.second->getInvalidVirtualPages());
             metrics[task.first] = metric;
         }
         return metrics;

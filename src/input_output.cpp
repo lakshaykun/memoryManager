@@ -5,7 +5,7 @@
 #include "../include/config.hpp"
 
 using namespace std;
-TaskManager taskManager(2);
+TaskManager taskManager(1);
 void Trace_file_task(const string& filename){
     ifstream file(filename);
     if(!file.is_open()){
@@ -37,7 +37,7 @@ void Trace_file_task(const string& filename){
      }
        
         bool alert = taskManager.addTask(taskid, address_hex, size_dec);
-        if (alert) {
+        if (!alert) {
             cerr << "Memory allocation failed for task " << taskid << "\n";
         }
     }
@@ -47,7 +47,7 @@ void writeMetricsToCSV(const TaskManager& taskManager, const std::string& filena
     std::ofstream csvFile(filename);
 
     // Write CSV header
-    csvFile << "Task ID,Page Hits,Page Misses,Execution Time,Page Table Size,Memory Allocated\n";
+    csvFile << "Task ID,Page Hits,Page Misses,Execution Time,Page Table Size,Memory Allocated,Invalid Vpn\n";
 
     // Fetch the metrics (already sorted by task ID)
     std::map<std::string, std::vector<double>> metrics = taskManager.tasksMetrics();

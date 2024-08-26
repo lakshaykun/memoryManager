@@ -22,7 +22,8 @@ private:
     size_t pageHit = 0;  // Counter for page hits
     size_t pageMiss = 0;  // Counter for page misses
     double executionTime = 0.0;  // Execution time tracking
-    int pagesAllocated = 0;  // Counter for pages allocated
+    size_t pagesAllocated = 0;  // Counter for pages allocated
+    size_t invalidVirtualPages = 0;  // Counter for invalid virtual pages
 
 public:
     // Constructor initializes task ID and memory manager pointer
@@ -40,6 +41,12 @@ public:
         for (size_t i = 0; i < pageReq; ++i) {
             auto start = chrono::high_resolution_clock::now();
             size_t virtualPage = (logicalAddress >> p) + i;  // Calculate the virtual page number
+            
+            if (virtualPage >= virtualPages) {
+                ++invalidVirtualPages;
+                continue;
+            }
+
             if (pageTable[virtualPage] != -1) {
                 ++pageHit;
                 continue;
@@ -93,6 +100,11 @@ public:
     size_t memoryAllocated() const {
         return pagesAllocated * pageSize;
     }
+
+    size_t getInvalidVirtualPages() const {
+        return invalidVirtualPages;
+    }
+
 };
 
 // TaskSingle class uses a single-level page table implemented as a vector
@@ -104,7 +116,8 @@ private:
     size_t pageHit = 0;  // Counter for page hits
     size_t pageMiss = 0;  // Counter for page misses
     double executionTime = 0.0;  // Execution time tracking
-    int pagesAllocated = 0;  // Counter for pages allocated
+    size_t pagesAllocated = 0;  // Counter for pages allocated
+    size_t invalidVirtualPages = 0;  // Counter for invalid virtual pages
 
 public:
     // Constructor initializes task ID, memory manager pointer, and page table size
@@ -117,6 +130,12 @@ public:
         for (size_t i = 0; i < pageReq; ++i) {
             auto start = chrono::high_resolution_clock::now();
             size_t virtualPage = (logicalAddress >> p) + i; // Calculate the virtual page number
+
+            if (virtualPage >= virtualPages) {
+                ++invalidVirtualPages;
+                continue;
+            }
+
             if (pageTable[virtualPage] != -1) {
                 ++pageHit;
                 continue;
@@ -170,6 +189,11 @@ public:
     size_t memoryAllocated() const {
         return pagesAllocated * pageSize;
     }
+
+    size_t getInvalidVirtualPages() const {
+        return invalidVirtualPages;
+    }
+
 };
 
 // TaskMulti class uses a multi-level page table implemented with vectors of vectors
@@ -182,6 +206,7 @@ private:
     size_t pageMiss = 0;  // Counter for page misses
     double executionTime = 0.0;  // Execution time tracking
     size_t pagesAllocated = 0;  // Counter for pages allocated
+    size_t invalidVirtualPages = 0;  // Counter for invalid virtual pages
 
 public:
     // Constructor initializes task ID, memory manager pointer, and the first-level page table size
@@ -194,6 +219,12 @@ public:
         for (size_t i = 0; i < pageReq; ++i) {
             auto start = chrono::high_resolution_clock::now();
             size_t virtualPage = (logicalAddress >> p) + i; // Calculate the virtual page number
+
+            if (virtualPage >= virtualPages) {
+                ++invalidVirtualPages;
+                continue;
+            }
+
             size_t vpn1 = (virtualPage >> pts2);
             size_t vpn2 = (virtualPage) & ((1LL << pts2) - 1);
             if (pageTable1[vpn1] == nullptr) {
@@ -263,6 +294,10 @@ public:
 
     size_t memoryAllocated() const {
         return pagesAllocated * pageSize;
+    }
+
+    size_t getInvalidVirtualPages() const {
+        return invalidVirtualPages;
     }
 };
 
