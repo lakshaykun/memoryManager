@@ -5,8 +5,7 @@
 #include "../include/config.hpp"
 
 using namespace std;
-using namespace std;
-TaskManager taskManager;
+TaskManager taskManager(2);
 void Trace_file_task(const string& filename){
     ifstream file(filename);
     if(!file.is_open()){
@@ -38,10 +37,6 @@ void Trace_file_task(const string& filename){
      }
        
         taskManager.addTask(taskid, address_hex, size_dec);
-        
-        
-
-
     }
 }
 

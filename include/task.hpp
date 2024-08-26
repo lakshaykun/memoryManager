@@ -11,13 +11,13 @@
 
 using namespace std;
 
-typedef vector<vector<int>*> PageTable;
+typedef vector<vector<size_t>*> PageTable;
 
 // TaskMap class uses a map-based page table to manage virtual to physical page mappings
 class TaskMap {
 private:
     string id;  // Unique identifier for the task
-    map<size_t, int> pageTable;  // Page table mapping virtual pages to physical pages
+    map<size_t, size_t> pageTable;  // Page table mapping virtual pages to physical pages
     MemoryManager* manager;  // Pointer to the memory manager to allocate/deallocate pages
     size_t pageHit = 0;  // Counter for page hits
     size_t pageMiss = 0;  // Counter for page misses
@@ -36,7 +36,7 @@ public:
     // Requests memory by allocating required pages and returns the number of page hits
     void requestMemory(size_t logicalAddress, size_t size) {
         auto start = chrono::high_resolution_clock::now();
-        size_t pageReq = (int) ceil((double) size / pageSize);  // Calculate required pages, rounding up
+        size_t pageReq = (size_t) ceil((double) size / pageSize);  // Calculate required pages, rounding up
         for (size_t i = 0; i < pageReq; ++i) {
             size_t virtualPage = (logicalAddress >> p) + i;  // Calculate the virtual page number
             if (pageTable[virtualPage] != -1) {
@@ -46,7 +46,7 @@ public:
                 ++pageMiss;
             }
 
-            int physicalPage = manager->allocatePage();
+            size_t physicalPage = manager->allocatePage();
             if (physicalPage != -1) {
                 pageTable[virtualPage] = physicalPage;
             } else {
@@ -92,7 +92,7 @@ public:
 class TaskSingle {
 private:
     string id;  // Unique identifier for the task
-    vector<int> pageTable;  // Page table as a vector where each index is a virtual page number
+    vector<size_t> pageTable;  // Page table as a vector where each index is a virtual page number
     MemoryManager* manager;  // Pointer to the memory manager to allocate/deallocate pages
     size_t pageHit = 0;  // Counter for page hits
     size_t pageMiss = 0;  // Counter for page misses
@@ -106,7 +106,7 @@ public:
     // Requests memory by allocating required pages
     void requestMemory(size_t logicalAddress, size_t size) {
         auto start = chrono::high_resolution_clock::now();
-        size_t pageReq = (int) ceil((double) size / pageSize);
+        size_t pageReq = (size_t) ceil((double) size / pageSize);
         for (size_t i = 0; i < pageReq; ++i) {
             size_t virtualPage = (logicalAddress >> p) + i; // Calculate the virtual page number
             if (pageTable[virtualPage] != -1) {
@@ -116,7 +116,7 @@ public:
                 ++pageMiss;
             }
 
-            int physicalPage = manager->allocatePage();
+            size_t physicalPage = manager->allocatePage();
             if (physicalPage != -1) {
                 pageTable[virtualPage] = physicalPage;
             } else {
@@ -137,7 +137,7 @@ public:
     }
 
     void deallocateMemory() {
-        for (int entry : pageTable) {
+        for (size_t entry : pageTable) {
             if (entry != -1) {
                 manager->deallocatePage(entry);
             }
@@ -176,13 +176,13 @@ public:
     // Requests memory by allocating required pages using a two-level page table structure
     void requestMemory(size_t logicalAddress, size_t size) {
         auto start = chrono::high_resolution_clock::now();
-        size_t pageReq = (int) ceil((double) size / pageSize);
+        size_t pageReq = (size_t) ceil((double) size / pageSize);
         for (size_t i = 0; i < pageReq; ++i) {
-            size_t vpn1 = (logicalAddress >> (p+pts2)) & ((1LL << pts1) - 1);
-            size_t vpn2 = (logicalAddress >> p) & ((1LL << pts2) - 1);
-            
+            size_t virtualPage = (logicalAddress >> p) + i; // Calculate the virtual page number
+            size_t vpn1 = (virtualPage >> pts2);
+            size_t vpn2 = (virtualPage) & ((1LL << pts2) - 1);
             if (pageTable1[vpn1] == nullptr) {
-                pageTable1[vpn1] = new vector<int>(pageTableSize2, -1);
+                pageTable1[vpn1] = new vector<size_t>(pageTableSize2, -1);
             }
 
             if (pageTable1[vpn1]->at(vpn2) != -1) {
@@ -192,7 +192,7 @@ public:
                 ++pageMiss;
             }
 
-            int physicalPage = manager->allocatePage();
+            size_t physicalPage = manager->allocatePage();
             if (physicalPage != -1) {
                 pageTable1[vpn1]->at(vpn2) = physicalPage;
             } else {
@@ -221,7 +221,7 @@ public:
     void deallocateMemory() {
         for (auto& entry : pageTable1) {
             if (entry != nullptr) {
-                for (int page : *entry) {
+                for (size_t page : *entry) {
                     if (page != -1) {
                         manager->deallocatePage(page);
                     }

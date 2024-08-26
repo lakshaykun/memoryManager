@@ -1,6 +1,14 @@
 # Prerequisites
 *.d
 
+# Ignore all executables
+*.exe
+*.out
+*.o
+*.a
+*.lib
+*.dll
+
 # Compiled Object files
 *.slo
 *.lo
