@@ -2,6 +2,7 @@
 *.d
 !*.*
 !*/
+*.txt
 
 # Ignore all executables
 *.exe
