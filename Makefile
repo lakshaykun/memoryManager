@@ -1,10 +1,10 @@
 CXX = g++
 
 # Default target
-all: app test
+all: ./bin/app.out ./bin/test.out
 
 # Compile the application
-app: ./src/input_output.cpp
+./bin/app.out: ./src/input_output.cpp
 	@mkdir -p bin
 	@mkdir -p traces
 	@mkdir -p output
@@ -15,8 +15,8 @@ run:
 	./bin/app.out
 
 # Compile the test
-test: ./test/test.cpp
-	$(CXX) ./test/test.cpp -o ./bin/test.out
+./bin/test.out: ./test/test.cpp
+	$(CXX) ./test/test.cpp -o ./bin/test.out -lpthread
 
 # Run the test
 trace: ./bin/test.out
